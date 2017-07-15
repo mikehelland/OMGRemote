@@ -15,7 +15,7 @@ class PlaybackThread extends Thread {
         if (jam == null)
             return;
 
-        long lastBeatPlayed = 0;
+        long lastBeatPlayed = System.currentTimeMillis() - jam.subbeatLength;
         long now;
 
         boolean cancel = false;
@@ -32,7 +32,8 @@ class PlaybackThread extends Thread {
                 continue;
             }
 
-            lastBeatPlayed = now;
+            //lastBeatPlayed = now;
+            lastBeatPlayed += jam.subbeatLength;
 
             jam.currentSubbeat++;
 

@@ -76,22 +76,25 @@ public class InstrumentFragment extends Fragment {
                 }
                 if ("NOTE_INFO".equals(name)) {
                     Log.d("MGH parse note info", value);
-                    String[] noteStrings = value.split(",");
+                    if (value.length() > 0) {
 
-                    Note note;
-                    channel.noteList = new ArrayList<Note>();
+                        String[] noteStrings = value.split(",");
 
-                    for (int i = 0; i < noteStrings.length; i++) {
-                        note = new Note();
-                        note.setRest(noteStrings[i].startsWith("-"));
-                        String[] noteData = noteStrings[i].split("\\|");
-                        note.setBeats(Math.abs(Double.parseDouble(noteData[0])));
-                        note.setInstrumentNote(Integer.parseInt(noteData[1]));
-                        channel.noteList.add(note);
+                        Note note;
+                        channel.noteList = new ArrayList<Note>();
+
+                        for (int i = 0; i < noteStrings.length; i++) {
+                            note = new Note();
+                            note.setRest(noteStrings[i].startsWith("-"));
+                            String[] noteData = noteStrings[i].split("\\|");
+                            note.setBeats(Math.abs(Double.parseDouble(noteData[0])));
+                            note.setInstrumentNote(Integer.parseInt(noteData[1]));
+                            channel.noteList.add(note);
+                        }
+
+                        ((GuitarView)view).setJam(mJam, channel, null);
+
                     }
-
-                    ((GuitarView)view).setJam(mJam, channel, null);
-                    mConnection.setInstrumentCallback(null);
 
                     infoReceived++;
                     if (infoReceived == 2)
