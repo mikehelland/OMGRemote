@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="horizontal"
+              android:gravity="center">
+
+
+    <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+
+    <TextView android:text="XXX"
+              android:layout_height="wrap_content"
+              android:layout_width="fill_parent"
+              android:id="@+id/master_volume_caption"
+              android:textSize="50sp"
+              android:gravity="center"
+              android:padding="8dip"
+            />
+
+    <com.mikehelland.omgbananasremote.VerticalSliderView
+             android:layout_width="fill_parent"
+             android:layout_height="match_parent"
+             android:id="@+id/master_volume_seekbar"
+             android:layout_below="@id/master_volume_caption"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+
+        <TextView android:text="XXX"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@+id/bpm_caption"
+            android:textSize="50sp"
+            android:gravity="center"
+            android:padding="8dip"
+            />
+
+        <com.mikehelland.omgbananasremote.VerticalSliderView
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/bpm_seekbar"
+            android:layout_below="@id/bpm_caption"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
