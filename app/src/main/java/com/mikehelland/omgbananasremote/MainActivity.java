@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 public class MainActivity extends FragmentActivity {
 
-    BluetoothFactory mBtf;
+    BluetoothFactory mBtf = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

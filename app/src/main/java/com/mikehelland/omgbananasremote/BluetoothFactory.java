@@ -152,16 +152,24 @@ public class BluetoothFactory {
         private BluetoothConnectCallback mCallback;
         public AcceptThread(BluetoothConnectCallback callback){
             mCallback = callback;
-            if (mServerSocket == null ) {
-                BluetoothServerSocket tmp = null;
-                try {
-                    tmp =  mBluetooth.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
+            BluetoothServerSocket tmp = null;
 
-                }    catch (IOException e) {
-                    newStatus(callback, "IOException in listenUsingRfcomm");
+            if (mServerSocket != null) {
+                try {
+                    mServerSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                mServerSocket = tmp;
+                mServerSocket = null;
             }
+
+            try {
+                tmp =  mBluetooth.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
+
+            }    catch (IOException e) {
+                newStatus(callback, "IOException in listenUsingRfcomm");
+            }
+            mServerSocket = tmp;
         }
 
         public void run(){
@@ -299,10 +307,10 @@ public class BluetoothFactory {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            mServerSocket = null;
         }
 
         if (acceptThread != null && !acceptThread.isInterrupted()){
-            Log.d("MGH", "cleanup 3");
             acceptThread.interrupt();
             try {
                 acceptThread.join();
@@ -311,11 +319,14 @@ public class BluetoothFactory {
                 //newStatus(statusCallback, "cleanup catch", -1);
             }
         }
-        Log.d("MGH", "cleanup 4");
+        acceptThread = null;
     }
 
     void newStatus(BluetoothConnectCallback callback, String newString) {
         Log.d("MGH newStatus", newString);
+        if (newString.equals(STATUS_IO_CONNECTED_THREAD)) {
+
+        }
 
         if (callback != null) {
             callback.newStatus(newString);

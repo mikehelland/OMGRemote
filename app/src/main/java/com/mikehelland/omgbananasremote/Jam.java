@@ -113,6 +113,13 @@ public class Jam {
             instrument.channel = i++;
             instrument.name = channelData.substring(1);
             instrument.chromatic = !channelData.startsWith("0");
+            if (channelData.startsWith("0"))
+                instrument.surfaceType = Instrument.SurfaceType.PRESET_SEQUENCER;
+            if (channelData.startsWith("1"))
+                instrument.surfaceType = Instrument.SurfaceType.PRESET_VERTICAL;
+            if (channelData.startsWith("2"))
+                instrument.surfaceType = Instrument.SurfaceType.PRESET_FRETBOARD;
+
             instruments.add(instrument);
         }
 

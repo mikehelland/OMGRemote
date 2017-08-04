@@ -44,14 +44,24 @@ public class AcceptConnectionFragment extends Fragment {
                 showRemoteControlFragment();
             }
         });
-
+        Log.d("MGH", "Accept Connection Fragment onCreate View");
         mBtf.startAccepting(new BluetoothConnectCallback() {
             @Override
             public void newStatus(final String status) {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        statusView.setText(status);
+                        if (status.equals(BluetoothFactory.STATUS_IO_CONNECTED_THREAD)) {
+                            spinningImage.setImageResource(R.drawable.device);
+                            statusView.setText("Accepting Connections...");
+                            int stackCount = getFragmentManager().getBackStackEntryCount();
+                            for (int i = 0; i < stackCount; i++) {
+                                getFragmentManager().popBackStack();
+                            }
+                        }
+                        else {
+                            statusView.setText(status);
+                        }
                     }
                 });
             }
@@ -60,7 +70,7 @@ public class AcceptConnectionFragment extends Fragment {
             @Override
             public void onConnected(BluetoothConnection connection) {
                 mConnection = connection;
-
+                Log.d("MGH", "Accept Connection Fragment onConnected");
 
                 activity.runOnUiThread(new Runnable() {
                     @Override
@@ -91,7 +101,7 @@ public class AcceptConnectionFragment extends Fragment {
         );
         ft.replace(R.id.main_layout, f);
         //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        //ft.addToBackStack(null);
+        ft.addToBackStack(null);
         ft.commit();
     }
 

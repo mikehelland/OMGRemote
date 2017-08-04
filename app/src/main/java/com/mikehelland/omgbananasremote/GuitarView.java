@@ -158,7 +158,8 @@ public class GuitarView extends View {
 
         if (mFretboard != null) {
             mFretboard.onDraw(canvas, getWidth(), getHeight());
-            //return;
+            Log.d("MGH", "return from onDraw");
+            return;
         }
 
         //if (height != getHeight()) {

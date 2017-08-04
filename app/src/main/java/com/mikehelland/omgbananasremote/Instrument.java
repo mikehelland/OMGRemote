@@ -7,10 +7,10 @@ public class Instrument {
     int channel;
     String name;
 
-    SurfaceType type;
+    SurfaceType surfaceType;
     boolean chromatic;
 
     enum SurfaceType {
-        DRUM_MACHINE, FRETBOARD, FULL_RANGE
+        PRESET_SEQUENCER, PRESET_VERTICAL, PRESET_FRETBOARD
     }
 }

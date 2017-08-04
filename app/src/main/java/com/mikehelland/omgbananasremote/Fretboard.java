@@ -167,6 +167,11 @@ public class Fretboard {
                 Note playNote = new Note();
 
                 FretMapElement fret = touch.fretMapping(fretMap);
+
+                Log.d("MGH basicnote", Integer.toString(fret.basicNote));
+                Log.d("MGH scalednote", Integer.toString(fret.scaledNote));
+                Log.d("MGH instrumentnote", Integer.toString(fret.instrumentNote));
+
                 playNote.setBasicNote(fret.basicNote);
                 playNote.setScaledNote(fret.scaledNote);
                 playNote.setInstrumentNote(fret.instrumentNote);

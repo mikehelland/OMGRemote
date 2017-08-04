@@ -18,6 +18,8 @@ public class InstrumentFragment extends Fragment {
     Instrument mInstrument;
     Jam mJam;
 
+    Fretboard mFretboard = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -27,18 +29,8 @@ public class InstrumentFragment extends Fragment {
 
         View view = null;
 
-        //if (mInstrument.type == Instrument.SurfaceType.DRUM_MACHINE) {
-        if (mInstrument.chromatic) {
-            view = inflater.inflate(R.layout.instrument,
-                    container, false);
+        if (mInstrument.surfaceType == Instrument.SurfaceType.PRESET_SEQUENCER) {
 
-            channel = new Channel(mConnection);
-
-            surfaceView = (GuitarView) view.findViewById(R.id.drummachine);
-            setupInstrumentCallback(channel, surfaceView);
-
-        }
-        else  {
             view = inflater.inflate(R.layout.drum_fragment,
                     container, false);
 
@@ -50,9 +42,17 @@ public class InstrumentFragment extends Fragment {
             setupDrumCallback(drumChannel, drumView);
 
         }
+        else {
+            view = inflater.inflate(R.layout.instrument,
+                    container, false);
+            channel = new Channel(mConnection);
+
+            surfaceView = (GuitarView) view.findViewById(R.id.drummachine);
+            setupInstrumentCallback(channel, surfaceView);
+
+        }
+
         RemoteControlBluetoothHelper.setChannel(mConnection, mInstrument.channel);
-
-
 
         return view;
     }
@@ -68,7 +68,12 @@ public class InstrumentFragment extends Fragment {
                     channel.highNote = Integer.parseInt(lowhigh[1]);
                     channel.octave = Integer.parseInt(lowhigh[2]);
 
-                    ((GuitarView)view).setJam(mJam, channel, null);
+                    if (mInstrument.surfaceType == Instrument.SurfaceType.PRESET_FRETBOARD) {
+                        mFretboard = new Fretboard(channel, mJam, getResources().getString(R.string.fretboard_json));
+                    }
+
+                    ((GuitarView)view).setJam(mJam, channel, mFretboard);
+
 
                     infoReceived++;
                     if (infoReceived == 2)
@@ -92,7 +97,7 @@ public class InstrumentFragment extends Fragment {
                             channel.noteList.add(note);
                         }
 
-                        ((GuitarView)view).setJam(mJam, channel, null);
+                        ((GuitarView)view).setJam(mJam, channel, mFretboard);
 
                     }
 
