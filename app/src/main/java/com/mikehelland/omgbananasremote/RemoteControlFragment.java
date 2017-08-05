@@ -49,6 +49,16 @@ public class RemoteControlFragment extends Fragment {
                         }
                     });
                 }
+                else if ("NEW_CHANNEL".equals(name)) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            makeInstrumentButton(
+                                    mJam.instruments.get(mJam.instruments.size() - 1),
+                                    instrumentList);
+                        }
+                    });
+                }
             }
         });
 
@@ -74,20 +84,24 @@ public class RemoteControlFragment extends Fragment {
     }
 
     void makeInstrumentButtons(ViewGroup instrumentList) {
-        Button button;
         for (final Instrument instrument : mJam.instruments) {
-            button = new Button(getContext());
-            button.setText(instrument.name);
-            button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
-            instrumentList.addView(button);
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onInstrumenClicked(instrument);
-                }
-            });
+            makeInstrumentButton(instrument, instrumentList);
         }
+    }
+
+    void makeInstrumentButton(final Instrument instrument, ViewGroup instrumentList) {
+        Button button = new Button(getContext());
+        button.setText(instrument.name);
+        button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onInstrumenClicked(instrument);
+            }
+        });
+
+        instrumentList.addView(button);
     }
 
     void onInstrumenClicked(Instrument instrument) {

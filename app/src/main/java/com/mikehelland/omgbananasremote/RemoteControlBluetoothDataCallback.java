@@ -6,12 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by m on 7/31/16.
- */
 public class RemoteControlBluetoothDataCallback extends BluetoothDataCallback {
 
-    BluetoothDataCallback instrumentCallback = null;
     Jam mJam;
     public RemoteControlBluetoothDataCallback(Jam jam) {
         mJam = jam;
@@ -52,6 +48,10 @@ public class RemoteControlBluetoothDataCallback extends BluetoothDataCallback {
 
         if ("SET_CHANNELS".equals(name)) {
             mJam.makeChannels(value);
+        }
+
+        if ("NEW_CHANNEL".equals(name)) {
+            mJam.makeChannel(value);
         }
 
         if ("LAUNCH_FRETBOARD".equals(name)) {

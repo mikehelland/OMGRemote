@@ -4,14 +4,10 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-/**
- * Created by m on 7/31/16.
- */
 public class Jam {
     int subbeats = 4;
     int beats = 8;
-    int totalsubbeats = subbeats * beats;
-    int subbeatLength = 125; //70 + rand.nextInt(125); // 125;
+    int subbeatLength = 125;
     int currentSubbeat = 0;
 
     boolean playing = false;
@@ -31,29 +27,29 @@ public class Jam {
     ArrayList<View> viewsToInvalidateOnNewMeasure = new ArrayList<>();
 
 
-    public int getBPM() {
+    int getBPM() {
         return 60000 / (subbeatLength * subbeats);
     }
-    public void setBPM(float bpm) {
+    void setBPM(float bpm) {
         subbeatLength = (int)((60000 / bpm) / subbeats);
         //bpm = 60000 / (subbeatLength * subbeats);
     }
-    public void setSubbeatLength(int subbeatLength) {
+    void setSubbeatLength(int subbeatLength) {
         this.subbeatLength = subbeatLength;
     }
-    public int getSubbeatLength() {
+    int getSubbeatLength() {
         return subbeatLength;
     }
 
-    public void addInvalidateOnBeatListener(View view) {
+    void addInvalidateOnBeatListener(View view) {
         viewsToInvalidateOnBeat.add(view);
     }
 
-    public int getTotalSubbeats() {
+    int getTotalSubbeats() {
         return beats * subbeats;
     }
 
-    public void setScale(String scale) {
+    void setScale(String scale) {
         this.scale = scale;
         String[] splitScale = scale.split(",");
         ascale = new int[splitScale.length];
@@ -62,23 +58,23 @@ public class Jam {
         }
     }
 
-    public void setKey(int i) {
+    void setKey(int i) {
         key = i;
     }
 
-    public int getKey() {
+    int getKey() {
         return key;
     }
 
-    public int[] getScale() {
+    int[] getScale() {
         return ascale;
     }
 
-    public String getScaleString() {
+    String getScaleString() {
         return scale;
     }
 
-    public int getScaledNoteNumber(int oldNoteNumber) {
+    int getScaledNoteNumber(int oldNoteNumber) {
         int newNoteNumber;
         int octaves;
 
@@ -102,27 +98,27 @@ public class Jam {
         return key + newNoteNumber + octaves * 12;
     }
 
-    public void makeChannels(String value) {
+    void makeChannel(String channelData) {
+        Instrument instrument = new Instrument();
+        instrument.channel = instruments.size();
+        instrument.name = channelData.substring(1);
+        instrument.chromatic = !channelData.startsWith("0");
+        if (channelData.startsWith("0"))
+            instrument.surfaceType = Instrument.SurfaceType.PRESET_SEQUENCER;
+        if (channelData.startsWith("1"))
+            instrument.surfaceType = Instrument.SurfaceType.PRESET_VERTICAL;
+        if (channelData.startsWith("2"))
+            instrument.surfaceType = Instrument.SurfaceType.PRESET_FRETBOARD;
 
-        int i = 0;
+        instruments.add(instrument);
+    }
+
+    void makeChannels(String value) {
         instruments.clear();
-        Instrument instrument;
         String[] channelsData = value.split(",");
         for (String channelData : channelsData) {
-            instrument = new Instrument();
-            instrument.channel = i++;
-            instrument.name = channelData.substring(1);
-            instrument.chromatic = !channelData.startsWith("0");
-            if (channelData.startsWith("0"))
-                instrument.surfaceType = Instrument.SurfaceType.PRESET_SEQUENCER;
-            if (channelData.startsWith("1"))
-                instrument.surfaceType = Instrument.SurfaceType.PRESET_VERTICAL;
-            if (channelData.startsWith("2"))
-                instrument.surfaceType = Instrument.SurfaceType.PRESET_FRETBOARD;
-
-            instruments.add(instrument);
+            makeChannel(channelData);
         }
-
     }
 
     void play() {
@@ -137,7 +133,7 @@ public class Jam {
         playing = false;
     }
 
-    void invalidateAllViews() {
+    private void invalidateAllViews() {
         for (View v : viewsToInvalidateOnBeat) {
             v.postInvalidate();
         }
