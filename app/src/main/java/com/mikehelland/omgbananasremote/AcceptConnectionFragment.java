@@ -17,22 +17,20 @@ import android.widget.TextView;
 public class AcceptConnectionFragment extends Fragment {
 
     private BluetoothConnection mConnection;
-    private View mView;
-    private BluetoothFactory mBtf;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.bluetooth_remote,
+        View view = inflater.inflate(R.layout.bluetooth_remote,
                 container, false);
 
         //getActivityMembers();
         final MainActivity activity = (MainActivity)getActivity();
-        mBtf = activity.mBtf;
+        BluetoothFactory btf = activity.mBtf;
 
-        final TextView statusView = (TextView)mView.findViewById(R.id.bt_status);
+        final TextView statusView = (TextView)view.findViewById(R.id.bt_status);
 
-        final ImageView spinningImage = (ImageView)mView.findViewById(R.id.remote_logo);
+        final ImageView spinningImage = (ImageView)view.findViewById(R.id.remote_logo);
         Animation turnin = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
         turnin.setDuration(4000);
         turnin.setRepeatCount(100);
@@ -45,7 +43,7 @@ public class AcceptConnectionFragment extends Fragment {
             }
         });
         Log.d("MGH", "Accept Connection Fragment onCreate View");
-        mBtf.startAccepting(new BluetoothConnectCallback() {
+        btf.startAccepting(new BluetoothConnectCallback() {
             @Override
             public void newStatus(final String status) {
                 activity.runOnUiThread(new Runnable() {
@@ -53,7 +51,7 @@ public class AcceptConnectionFragment extends Fragment {
                     public void run() {
                         if (status.equals(BluetoothFactory.STATUS_IO_CONNECTED_THREAD)) {
                             spinningImage.setImageResource(R.drawable.device);
-                            statusView.setText("Accepting Connections...");
+                            statusView.setText(R.string.accepting_connections);
                             int stackCount = getFragmentManager().getBackStackEntryCount();
                             for (int i = 0; i < stackCount; i++) {
                                 getFragmentManager().popBackStack();
@@ -75,7 +73,7 @@ public class AcceptConnectionFragment extends Fragment {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        statusView.setText("Connected");
+                        statusView.setText(R.string.connected);
                         spinningImage.setImageResource(R.drawable.device_blue);
                         showRemoteControlFragment();
                     }
@@ -85,13 +83,14 @@ public class AcceptConnectionFragment extends Fragment {
         });
 
 
-        return mView;
+        return view;
     }
 
 
     private void showRemoteControlFragment() {
         RemoteControlFragment f = new RemoteControlFragment();
         f.mConnection = mConnection;
+        f.mJam = new Jam();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(
                 R.anim.slide_in_up,

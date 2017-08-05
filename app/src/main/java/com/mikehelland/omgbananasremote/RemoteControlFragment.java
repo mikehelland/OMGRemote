@@ -3,18 +3,12 @@ package com.mikehelland.omgbananasremote;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
-
-/**
- * Created by m on 7/30/16.
- */
 public class RemoteControlFragment extends Fragment {
 
     BluetoothConnection mConnection;
@@ -30,12 +24,11 @@ public class RemoteControlFragment extends Fragment {
 
         final ViewGroup instrumentList = (ViewGroup)view.findViewById(R.id.instrument_list);
 
-        mJam = new Jam();
         mPlaybackThread = new PlaybackThread();
         mPlaybackThread.jam = mJam;
         mPlaybackThread.start();
 
-
+        makeInstrumentButtons(instrumentList);
 
         mConnection.setDataCallback(new RemoteControlBluetoothDataCallback(mJam) {
             @Override
@@ -43,32 +36,21 @@ public class RemoteControlFragment extends Fragment {
                 super.newData(name, value);
 
                 if ("SET_CHANNELS".equals(name)) {
+
+                    if (getFragmentManager().getBackStackEntryCount() > 1) {
+                        getFragmentManager().popBackStack();
+                    }
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Button button;
-                            for (final Instrument instrument : mJam.instruments) {
-                                button = new Button(getContext());
-                                button.setText(instrument.name);
-                                button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
-                                instrumentList.addView(button);
-
-                                button.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        onInstrumenClicked(instrument);
-                                    }
-                                });
-                            }
+                            instrumentList.removeAllViewsInLayout();
+                            makeInstrumentButtons(instrumentList);
                         }
                     });
                 }
             }
         });
-
-
-        RemoteControlBluetoothHelper.getJamInfo(mConnection);
-
 
         view.findViewById(R.id.bpm_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +71,23 @@ public class RemoteControlFragment extends Fragment {
 
 
         return view;
+    }
+
+    void makeInstrumentButtons(ViewGroup instrumentList) {
+        Button button;
+        for (final Instrument instrument : mJam.instruments) {
+            button = new Button(getContext());
+            button.setText(instrument.name);
+            button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+            instrumentList.addView(button);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onInstrumenClicked(instrument);
+                }
+            });
+        }
     }
 
     void onInstrumenClicked(Instrument instrument) {
