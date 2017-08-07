@@ -310,7 +310,7 @@ public class GuitarView extends View {
         scale = mJam.getScale();
         frets = 0;
 
-        useScale = true; //TODO mChannel.isAScale();
+        useScale = mChannel.chromatic;
 
         if (!useScale) {
             key = 0;

@@ -67,6 +67,7 @@ public class InstrumentFragment extends Fragment {
                     channel.lowNote = Integer.parseInt(lowhigh[0]);
                     channel.highNote = Integer.parseInt(lowhigh[1]);
                     channel.octave = Integer.parseInt(lowhigh[2]);
+                    channel.chromatic = mInstrument.chromatic;
 
                     if (mInstrument.surfaceType == Instrument.SurfaceType.PRESET_FRETBOARD) {
                         mFretboard = new Fretboard(channel, mJam, getResources().getString(R.string.fretboard_json));

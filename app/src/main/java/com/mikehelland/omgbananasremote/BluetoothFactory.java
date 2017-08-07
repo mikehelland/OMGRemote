@@ -174,6 +174,10 @@ public class BluetoothFactory {
 
         public void run(){
 
+            if (mServerSocket == null) {
+                return;
+            }
+
             BluetoothSocket socket;
             while (!isInterrupted()){
                 try {

@@ -101,13 +101,14 @@ public class Jam {
     void makeChannel(String channelData) {
         Instrument instrument = new Instrument();
         instrument.channel = instruments.size();
-        instrument.name = channelData.substring(1);
+        instrument.name = channelData.substring(2);
         instrument.chromatic = !channelData.startsWith("0");
-        if (channelData.startsWith("0"))
+        String surfaceType = channelData.substring(1, 2);
+        if (surfaceType.startsWith("0"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_SEQUENCER;
-        if (channelData.startsWith("1"))
+        if (surfaceType.startsWith("1"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_VERTICAL;
-        if (channelData.startsWith("2"))
+        if (surfaceType.startsWith("2"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_FRETBOARD;
 
         instruments.add(instrument);
