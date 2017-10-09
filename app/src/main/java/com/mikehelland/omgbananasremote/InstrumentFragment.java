@@ -20,6 +20,8 @@ public class InstrumentFragment extends Fragment {
 
     Fretboard mFretboard = null;
 
+    View mView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -27,7 +29,7 @@ public class InstrumentFragment extends Fragment {
         final GuitarView surfaceView;
         final Channel channel;
 
-        View view = null;
+        View view;
 
         if (mInstrument.surfaceType == Instrument.SurfaceType.PRESET_SEQUENCER) {
 
@@ -40,7 +42,7 @@ public class InstrumentFragment extends Fragment {
             drumView.setJam(mJam, drumChannel);
 
             setupDrumCallback(drumChannel, drumView);
-
+            mView = (View)drumView;
         }
         else {
             view = inflater.inflate(R.layout.instrument,
@@ -49,7 +51,7 @@ public class InstrumentFragment extends Fragment {
 
             surfaceView = (GuitarView) view.findViewById(R.id.drummachine);
             setupInstrumentCallback(channel, surfaceView);
-
+            mView = (View)surfaceView;
         }
 
         RemoteControlBluetoothHelper.setChannel(mConnection, mInstrument.channel);
@@ -146,4 +148,8 @@ public class InstrumentFragment extends Fragment {
 
     }
 
+    public void onPause() {
+        super.onPause();
+        mJam.viewsToInvalidateOnBeat.remove(mView);
+    }
 }
