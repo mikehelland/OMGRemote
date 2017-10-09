@@ -75,11 +75,14 @@ public class RemoteControlFragment extends Fragment {
         view.findViewById(R.id.chordprogression_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RemoteControlBluetoothHelper.getJamInfo(mConnection);
+                ChordFragment f = new ChordFragment();
+                f.mConnection = mConnection;
+                f.mJam = mJam;
+                showFragment(f);
             }
         });
 
-
+        //RemoteControlBluetoothHelper.getJamInfo(mConnection);
         return view;
     }
 

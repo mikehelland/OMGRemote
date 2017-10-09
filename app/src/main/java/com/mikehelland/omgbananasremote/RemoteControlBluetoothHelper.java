@@ -12,6 +12,10 @@ public class RemoteControlBluetoothHelper {
         connection.writeString("SET_CHANNEL=" + channel + ";");
     }
 
+    static void setChord(BluetoothConnection connection, int value) {
+        connection.writeString("SET_CHORD=" + value + ";");
+    }
+
     public static void playNote(BluetoothConnection connection, Note note) {
         int instrumentNumber = note.isRest() ? -1 : note.getInstrumentNote();
         int basicNote = note.isRest() ? -1 : note.getBasicNote();
