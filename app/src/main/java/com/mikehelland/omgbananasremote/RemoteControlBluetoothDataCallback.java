@@ -37,16 +37,16 @@ public class RemoteControlBluetoothDataCallback extends BluetoothDataCallback {
             return;
         }
 
-        if ("SET_KEY".equals(name)) {
+        if ("JAMINFO_KEY".equals(name)) {
             mJam.setKey(Integer.parseInt(value));
             return;
         }
 
-        if ("SET_SCALE".equals(name)) {
+        if ("JAMINFO_SCALE".equals(name)) {
             mJam.setScale(value);
         }
 
-        if ("SET_CHANNELS".equals(name)) {
+        if ("JAMINFO_CHANNELS".equals(name)) {
             mJam.makeChannels(value);
         }
 

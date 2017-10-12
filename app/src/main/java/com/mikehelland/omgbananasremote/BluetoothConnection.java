@@ -10,7 +10,7 @@ import java.io.OutputStream;
 
 public class BluetoothConnection extends Thread {
     private BluetoothDevice mDevice;
-    private BluetoothFactory bluetoothFactory;
+    private BluetoothManager mBT;
     private final InputStream mmInStream;
     private final OutputStream mmOutStream;
     private final BluetoothSocket socket;
@@ -22,9 +22,9 @@ public class BluetoothConnection extends Thread {
 
     private boolean disconnected = false;
     
-    public BluetoothConnection(BluetoothDevice device, BluetoothFactory bluetoothFactory,
+    public BluetoothConnection(BluetoothDevice device, BluetoothManager bluetoothFactory,
                                BluetoothSocket socket, BluetoothConnectCallback callback){
-        this.bluetoothFactory = bluetoothFactory;
+        this.mBT = bluetoothFactory;
         mConnectedCallback = callback;
         InputStream tmpIn = null;
         OutputStream tmpOut = null;
@@ -67,8 +67,8 @@ public class BluetoothConnection extends Thread {
             } catch (IOException e){
                 Log.d(TAG, e.getMessage());
 
-                if (!bluetoothFactory.cleaningUp) {
-                    bluetoothFactory.newStatus(mConnectedCallback, BluetoothFactory.STATUS_IO_CONNECTED_THREAD);
+                if (!mBT.cleaningUp) {
+                    mBT.newStatus(mConnectedCallback, BluetoothFactory.STATUS_IO_CONNECTED_THREAD);
                 }
                 break;
             }
@@ -80,13 +80,13 @@ public class BluetoothConnection extends Thread {
                 //Log.d("MGH", data);
 
                 if (mDataCallback != null)
-                    bluetoothFactory.newData(mDataCallback, mInstrumentCallback, data);
+                    mBT.newData(mDataCallback, mInstrumentCallback, data);
             }
 
         }
 
         disconnected = true;
-        if (!bluetoothFactory.cleaningUp) {
+        if (!mBT.cleaningUp) {
             resetConnections();
         }
     }
@@ -100,6 +100,7 @@ public class BluetoothConnection extends Thread {
     }
 
     public void writeString(String toWrite){
+        Log.d("MGH writeString", toWrite);
         try {
             mmOutStream.write(toWrite.getBytes());
         } catch (IOException e) {

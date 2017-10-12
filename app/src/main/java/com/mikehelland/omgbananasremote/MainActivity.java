@@ -10,12 +10,14 @@ import android.view.WindowManager;
 public class MainActivity extends FragmentActivity {
 
     BluetoothFactory mBtf = null;
+    BluetoothManager mBT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBtf = new BluetoothFactory(this);
+        mBT = new BluetoothManager(this);
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
@@ -24,7 +26,8 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_main);
 
-        Fragment mWelcomeFragment = new AcceptConnectionFragment();
+        //Fragment mWelcomeFragment = new AcceptConnectionFragment();
+        Fragment mWelcomeFragment = new ConnectToHostFragment();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.main_layout, mWelcomeFragment);

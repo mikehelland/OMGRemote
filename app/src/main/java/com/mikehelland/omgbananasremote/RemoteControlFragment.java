@@ -35,7 +35,7 @@ public class RemoteControlFragment extends Fragment {
             public void newData(String name, String value) {
                 super.newData(name, value);
 
-                if ("SET_CHANNELS".equals(name)) {
+                if ("JAMINFO_CHANNELS".equals(name)) {
 
                     if (getFragmentManager().getBackStackEntryCount() > 1) {
                         getFragmentManager().popBackStack();
