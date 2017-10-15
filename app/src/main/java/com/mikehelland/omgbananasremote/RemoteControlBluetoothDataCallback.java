@@ -22,7 +22,7 @@ public class RemoteControlBluetoothDataCallback extends BluetoothDataCallback {
             return;
         }*/
 
-        if ("SET_SUBBEATLENGTH".equals(name)) {
+        if ("JAMINFO_SUBBEATLENGTH".equals(name)) {
             mJam.setSubbeatLength(Integer.parseInt(value));
             return;
         }

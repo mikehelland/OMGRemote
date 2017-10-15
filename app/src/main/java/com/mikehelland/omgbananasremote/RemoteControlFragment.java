@@ -23,6 +23,8 @@ public class RemoteControlFragment extends Fragment {
 
 
         final ViewGroup instrumentList = (ViewGroup)view.findViewById(R.id.instrument_list);
+        final Button keyButton = (Button)view.findViewById(R.id.key_button);
+        final Button bpmButton = (Button)view.findViewById(R.id.bpm_button);
 
         mPlaybackThread = new PlaybackThread();
         mPlaybackThread.jam = mJam;
@@ -49,6 +51,22 @@ public class RemoteControlFragment extends Fragment {
                         }
                     });
                 }
+                else if ("JAMINFO_SUBBEATLENGTH".equals(name)) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            bpmButton.setText(mJam.getBPM() + " bpm");
+                        }
+                    });
+                }
+                else if ("JAMINFO_KEY".equals(name) || "JAMINFO_SCALE".equals(name)) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            keyButton.setText(mJam.getKeyName());
+                        }
+                    });
+                }
                 else if ("NEW_CHANNEL".equals(name)) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -62,7 +80,7 @@ public class RemoteControlFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.bpm_button).setOnClickListener(new View.OnClickListener() {
+        bpmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 BPMFragment f = new BPMFragment();
@@ -71,6 +89,7 @@ public class RemoteControlFragment extends Fragment {
                 showFragment(f);
             }
         });
+        bpmButton.setText(mJam.getBPM() + " bpm");
 
         view.findViewById(R.id.chordprogression_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +100,17 @@ public class RemoteControlFragment extends Fragment {
                 showFragment(f);
             }
         });
+
+        keyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                KeyFragment f = new KeyFragment();
+                f.mConnection = mConnection;
+                f.mJam = mJam;
+                showFragment(f);
+            }
+        });
+        keyButton.setText(mJam.getKeyName());
 
         //RemoteControlBluetoothHelper.getJamInfo(mConnection);
         return view;

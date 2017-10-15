@@ -5,6 +5,10 @@ import android.view.View;
 import java.util.ArrayList;
 
 public class Jam {
+    static String[] KEY_CAPTIONS = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
+    static String[] SCALE_CAPTIONS = {"Major", "Minor", "Pentatonic", "Blues"};
+    static String[] SCALES = {"0,2,4,5,7,9,11", "0,2,3,5,7,8,10", "0,2,4,7,9", "0,3,5,6,7,10"};
+
     int subbeats = 4;
     int beats = 8;
     int subbeatLength = 125;
@@ -17,6 +21,7 @@ public class Jam {
     ArrayList<Instrument> instruments = new ArrayList<>();
 
     private int[] ascale;
+    private int scaleI;
     private String scale;
     private int key;
 
@@ -26,6 +31,9 @@ public class Jam {
     ArrayList<View> viewsToInvalidateOnBeat = new ArrayList<>();
     ArrayList<View> viewsToInvalidateOnNewMeasure = new ArrayList<>();
 
+    String getKeyName() {
+        return KEY_CAPTIONS[key] + " " + SCALE_CAPTIONS[scaleI];
+    }
 
     int getBPM() {
         return 60000 / (subbeatLength * subbeats);
@@ -50,6 +58,13 @@ public class Jam {
     }
 
     void setScale(String scale) {
+        for (int i = 0; i < SCALES.length; i++) {
+            if (SCALES[i].equals(scale)) {
+                scaleI = i;
+                break;
+            }
+        }
+
         this.scale = scale;
         String[] splitScale = scale.split(",");
         ascale = new int[splitScale.length];
