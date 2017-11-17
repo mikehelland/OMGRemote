@@ -137,6 +137,9 @@ public class Jam {
     }
 
     void makeChannels(String value) {
+
+        if (value.length() == 0) return;
+
         synchronized (instruments) {
             instruments.clear();
             String[] channelsData = value.split("\\|");
