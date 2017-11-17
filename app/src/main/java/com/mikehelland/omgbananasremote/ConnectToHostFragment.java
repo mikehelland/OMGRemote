@@ -37,12 +37,19 @@ public class ConnectToHostFragment extends Fragment {
         mStatusText = (TextView)mView.findViewById(R.id.bt_status);
         mImageView = (ImageView)mView.findViewById(R.id.remote_logo);
 
-        mBT.whenReady(new BluetoothReadyCallback() {
-            @Override
-            public void onReady() {
-                setup();
-            }
-        });
+        if (mConnection != null && !mConnection.isDisconnected()) {
+            mStatusText.setText(R.string.connected);
+            mImageView.setImageResource(R.drawable.device_blue);
+            showRemoteControlFragmentAfterDelay(500);
+        }
+        else {
+            mBT.whenReady(new BluetoothReadyCallback() {
+                @Override
+                public void onReady() {
+                    setup();
+                }
+            });
+        }
 
         return mView;
     }
@@ -97,6 +104,7 @@ public class ConnectToHostFragment extends Fragment {
             mStatusText.setText(String.format(getString(R.string.device_not_paired), host.name));
             return;
         }
+
 
         mBT.connectTo(device, new BluetoothConnectCallback() {
             @Override
@@ -178,5 +186,19 @@ public class ConnectToHostFragment extends Fragment {
             }
         });
         showFragment(f);
+    }
+
+    private void showRemoteControlFragmentAfterDelay(final int delay) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                showRemoteControlFragment();
+            }
+        }).start();
     }
 }
