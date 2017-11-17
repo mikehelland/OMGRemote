@@ -168,13 +168,25 @@ public class RemoteControlFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.mixer_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MixerFragment f = new MixerFragment();
+                f.mConnection = mConnection;
+                f.mJam = mJam;
+                showFragment(f);
+            }
+        });
+
         RemoteControlBluetoothHelper.getJamInfo(mConnection);
         return view;
     }
 
     void makeInstrumentButtons(ViewGroup instrumentList) {
-        for (final Instrument instrument : mJam.instruments) {
-            makeInstrumentButton(instrument, instrumentList);
+        synchronized (mJam.instruments) {
+            for (final Instrument instrument : mJam.instruments) {
+                makeInstrumentButton(instrument, instrumentList);
+            }
         }
     }
 

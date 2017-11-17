@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 /**
@@ -49,7 +48,7 @@ public class BPMFragment extends Fragment {
         return view;
     }
 
-    /*public void setJam(Jam jam, MainFragment mainFragment) {
+    /*public void setup(Jam jam, MainFragment mainFragment) {
         mJam = jam;
         mMainFragment = mainFragment;
 

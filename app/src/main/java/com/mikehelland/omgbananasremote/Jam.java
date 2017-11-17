@@ -3,6 +3,8 @@ package com.mikehelland.omgbananasremote;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Jam {
     static String[] KEY_CAPTIONS = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
@@ -18,7 +20,7 @@ public class Jam {
     long timeSinceLast = 0;
 
 
-    ArrayList<Instrument> instruments = new ArrayList<>();
+    final List<Instrument> instruments = Collections.synchronizedList(new ArrayList<Instrument>());
 
     private int[] ascale;
     private int scaleI;
@@ -114,11 +116,13 @@ public class Jam {
     }
 
     void makeChannel(String channelData) {
+        String[] dataParts = channelData.split(",");
+
         Instrument instrument = new Instrument();
         instrument.channel = instruments.size();
-        instrument.name = channelData.substring(2);
-        instrument.chromatic = !channelData.startsWith("0");
-        String surfaceType = channelData.substring(1, 2);
+        instrument.name = dataParts[3];
+        instrument.chromatic = !dataParts[0].equals("0");
+        String surfaceType = dataParts[1];
         if (surfaceType.startsWith("0"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_SEQUENCER;
         if (surfaceType.startsWith("1"))
@@ -126,14 +130,19 @@ public class Jam {
         if (surfaceType.startsWith("2"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_FRETBOARD;
 
-        instruments.add(instrument);
+        instrument.volume = Float.parseFloat(dataParts[2]);
+        synchronized (instruments) {
+            instruments.add(instrument);
+        }
     }
 
     void makeChannels(String value) {
-        instruments.clear();
-        String[] channelsData = value.split(",");
-        for (String channelData : channelsData) {
-            makeChannel(channelData);
+        synchronized (instruments) {
+            instruments.clear();
+            String[] channelsData = value.split("\\|");
+            for (String channelData : channelsData) {
+                makeChannel(channelData);
+            }
         }
     }
 

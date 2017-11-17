@@ -6,6 +6,7 @@ package com.mikehelland.omgbananasremote;
 public class Instrument {
     int channel;
     String name;
+    float volume;
 
     SurfaceType surfaceType;
     boolean chromatic;
