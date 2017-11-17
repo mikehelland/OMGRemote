@@ -33,4 +33,18 @@ public class RemoteControlBluetoothHelper {
         connection.writeString("GET_JAM_INFO=TRUE;");
 
     }
+
+    public static void setPlay(BluetoothConnection connection) {
+        connection.writeString("SET_PLAY;");
+    }
+    public static void setStop(BluetoothConnection connection) {
+        connection.writeString("SET_STOP;");
+    }
+
+    public static void getSavedJams(BluetoothConnection connection) {
+        connection.writeString("GET_SAVED_JAMS=TRUE;");
+    }
+    public static void getSoundSets(BluetoothConnection connection) {
+        connection.writeString("GET_SOUNDSETS=TRUE;");
+    }
 }

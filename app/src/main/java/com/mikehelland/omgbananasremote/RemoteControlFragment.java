@@ -1,5 +1,6 @@
 package com.mikehelland.omgbananasremote;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -25,6 +26,10 @@ public class RemoteControlFragment extends Fragment {
         final ViewGroup instrumentList = (ViewGroup)view.findViewById(R.id.instrument_list);
         final Button keyButton = (Button)view.findViewById(R.id.key_button);
         final Button bpmButton = (Button)view.findViewById(R.id.bpm_button);
+
+        final Button loadButton = (Button)view.findViewById(R.id.load_button);
+        final Button addChannelButton = (Button)view.findViewById(R.id.add_channel_button);
+        final Button playButton = (Button)view.findViewById(R.id.play_button);
 
         mPlaybackThread = new PlaybackThread();
         mPlaybackThread.jam = mJam;
@@ -77,6 +82,31 @@ public class RemoteControlFragment extends Fragment {
                         }
                     });
                 }
+                else if ("PLAY".equals(name)) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            playButton.setText("Stop");
+                            playButton.setBackgroundColor(Color.GREEN);
+                        }
+                    });
+                }
+                else if ("STOP".equals(name)) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            playButton.setText("Play");
+                            playButton.setBackgroundColor(Color.RED);
+                        }
+                    });
+                }
+                else if ("SAVED_JAMS".equals(name)) {
+                    chooseSavedJam(value);
+                }
+                else if ("SOUNDSETS".equals(name)) {
+                    chooseSoundSet(value);
+                }
+
             }
         });
 
@@ -112,7 +142,33 @@ public class RemoteControlFragment extends Fragment {
         });
         keyButton.setText(mJam.getKeyName());
 
-        //RemoteControlBluetoothHelper.getJamInfo(mConnection);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mJam.playing) {
+                    RemoteControlBluetoothHelper.setStop(mConnection);
+                }
+                else {
+                    RemoteControlBluetoothHelper.setPlay(mConnection);
+                }
+            }
+        });
+
+        loadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RemoteControlBluetoothHelper.getSavedJams(mConnection);
+            }
+        });
+
+        addChannelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RemoteControlBluetoothHelper.getSoundSets(mConnection);
+            }
+        });
+
+        RemoteControlBluetoothHelper.getJamInfo(mConnection);
         return view;
     }
 
@@ -161,4 +217,32 @@ public class RemoteControlFragment extends Fragment {
 
     }
 
+    private void chooseSavedJam(final String jams) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            SavedJamsFragment f = new SavedJamsFragment();
+            f.mSavedJamsString = jams;
+            f.mConnection = mConnection;
+            f.mJam = mJam;
+            showFragment(f);
+
+            }
+        });
+    }
+    private void chooseSoundSet(final String data) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                SoundSetsFragment f = new SoundSetsFragment();
+                f.mSoundSetsString = data;
+                f.mConnection = mConnection;
+                f.mJam = mJam;
+                showFragment(f);
+
+            }
+        });
+    }
 }
