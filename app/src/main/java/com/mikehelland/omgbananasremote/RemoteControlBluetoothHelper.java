@@ -1,9 +1,6 @@
 package com.mikehelland.omgbananasremote;
 
-/**
- * Created by m on 7/31/16.
- */
-public class RemoteControlBluetoothHelper {
+class RemoteControlBluetoothHelper {
     static void sendNewSubbeatLength(BluetoothConnection connection, int subbeatLength) {
         connection.writeString("SET_SUBBEATLENGTH=" + subbeatLength + ";");
     }
@@ -22,29 +19,33 @@ public class RemoteControlBluetoothHelper {
         connection.writeString("SET_SCALE=" + value + ";");
     }
 
-    public static void playNote(BluetoothConnection connection, Note note) {
+    static void playNote(BluetoothConnection connection, Note note) {
         int instrumentNumber = note.isRest() ? -1 : note.getInstrumentNote();
         int basicNote = note.isRest() ? -1 : note.getBasicNote();
         connection.writeString("CHANNEL_PLAY_NOTE=" + basicNote + "," + instrumentNumber + ";");
 
     }
 
-    public static void getJamInfo(BluetoothConnection connection) {
+    static void getJamInfo(BluetoothConnection connection) {
         connection.writeString("GET_JAM_INFO=TRUE;");
 
     }
 
-    public static void setPlay(BluetoothConnection connection) {
+    static void setPlay(BluetoothConnection connection) {
         connection.writeString("SET_PLAY;");
     }
-    public static void setStop(BluetoothConnection connection) {
+    static void setStop(BluetoothConnection connection) {
         connection.writeString("SET_STOP;");
     }
 
-    public static void getSavedJams(BluetoothConnection connection) {
+    static void getSavedJams(BluetoothConnection connection) {
         connection.writeString("GET_SAVED_JAMS=TRUE;");
     }
-    public static void getSoundSets(BluetoothConnection connection) {
+    static void getSoundSets(BluetoothConnection connection) {
         connection.writeString("GET_SOUNDSETS=TRUE;");
+    }
+
+    static void setArpeggiator(BluetoothConnection connection, int arpeggiate) {
+        connection.writeString("SET_ARPEGGIATOR=" + Integer.toString(arpeggiate) + ";");
     }
 }

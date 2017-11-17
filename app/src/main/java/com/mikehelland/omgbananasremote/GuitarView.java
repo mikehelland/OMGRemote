@@ -53,6 +53,7 @@ public class GuitarView extends View {
     private int[] scale;
 
     private int frets = 0;
+    private int strings = 4;
 
     private int[] fretMapping;
     private int[] noteMapping;
@@ -167,6 +168,8 @@ public class GuitarView extends View {
             height = getHeight();
             boxHeight = height / frets;
             boxHeightHalf = boxHeight / 2;
+            paint.setTextSize(boxHeightHalf);
+            boxWidth = width / strings;
 
         int subbeats = mJam.getTotalSubbeats();
 
@@ -198,8 +201,10 @@ public class GuitarView extends View {
             canvas.drawLine(0, height - fret * boxHeight, width,
                     height - fret * boxHeight, paint);
 
-            canvas.drawText(keyCaptions[noteNumber % 12], 0,
-                    height - (fret - 1) * boxHeight - boxHeightHalf, paint);
+            if (useScale || noteNumber < mChannel.soundsetCaptions.length) {
+                canvas.drawText(useScale ? keyCaptions[noteNumber % 12] : mChannel.soundsetCaptions[noteNumber],
+                        0, height - (fret - 1) * boxHeight - boxHeightHalf, paint);
+            }
 
         }
 
@@ -213,6 +218,7 @@ public class GuitarView extends View {
 
         }
 
+        drawColumns(canvas);
         drawNotes(canvas, mChannel.noteList);
 
     }
@@ -240,7 +246,9 @@ public class GuitarView extends View {
             //TODO if (!mChannel.enabled)
             //    mChannel.enable();
 
-            touchingString = (int)Math.floor(event.getX() / boxWidth);
+            //touchingString = (int)Math.floor(event.getX() / boxWidth);
+            touchingString = getTouchingString(event.getX());
+
             touchingFret = (int)Math.floor(event.getY() / boxHeight);
             touchingFret = Math.max(0, Math.min(fretMapping.length - 1, touchingFret));
 
@@ -252,12 +260,13 @@ public class GuitarView extends View {
             note.setScaledNote(fretMapping[touchingFret]);
             note.setInstrumentNote(fretMapping[touchingFret] - lowNote);
             mChannel.playLiveNote(note);
-
+            mChannel.setArpeggiator(touchingString);
         }
 
         if (action == MotionEvent.ACTION_MOVE) {
             if (lastFret > -1) {
-                touchingString = (int)Math.floor(event.getX() / boxWidth);
+                touchingString = getTouchingString(event.getX());
+
                 touchingFret = (int)Math.floor(event.getY() / boxHeight);
                 touchingFret = Math.max(0, Math.min(fretMapping.length - 1, touchingFret));
 
@@ -273,6 +282,7 @@ public class GuitarView extends View {
                     mChannel.playLiveNote(note);
 
                 }
+                mChannel.setArpeggiator(touchingString);
 
             }
 
@@ -436,6 +446,24 @@ public class GuitarView extends View {
             beatsUsed += draw_note.getBeats();
         }
 
+    }
+
+    void drawColumns(Canvas canvas) {
+        for (int i = 1; i < strings; i++) {
+            canvas.drawLine(i * boxWidth, 0, i * boxWidth, height, paint);
+        }
+    }
+
+    int getTouchingString(float x) {
+        int touchingString = (int)Math.floor(x / boxWidth);
+        if (touchingString == 3) {
+            return 1;
+        }
+        if (touchingString == 1) {
+            return 4;
+        }
+
+        return touchingString;
     }
 
 }

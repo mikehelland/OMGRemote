@@ -2,10 +2,7 @@ package com.mikehelland.omgbananasremote;
 
 import java.util.ArrayList;
 
-/**
- * Created by m on 7/31/16.
- */
-public class Channel {
+class Channel {
 
     BluetoothConnection mConnection;
 
@@ -18,28 +15,32 @@ public class Channel {
     String name;
     boolean chromatic;
 
-    public Channel(BluetoothConnection connection) {
+    private int arpeggiate = -1;
+
+    Channel(BluetoothConnection connection) {
         mConnection = connection;
     }
 
-    public void playLiveNote(Note note, boolean multitrack) {
+    void playLiveNote(Note note, boolean multitrack) {
         playLiveNote(note);
     }
-    public void playLiveNote(Note note) {
+    void playLiveNote(Note note) {
         RemoteControlBluetoothHelper.playNote(mConnection, note);
     }
 
-    public int getOctave() {
+    int getOctave() {
         return octave;
     }
-    public int getLowNote() {
+    int getLowNote() {
         return lowNote;
     }
-    public int getHighNote() {
+    int getHighNote() {
         return highNote;
     }
 
-    public int getInstrumentNoteNumber(int scaledNote) {
+    String[] soundsetCaptions =  new String[0];
+
+    int getInstrumentNoteNumber(int scaledNote) {
         int noteToPlay = scaledNote + octave * 12;
 
         while (noteToPlay < lowNote) {
@@ -54,4 +55,10 @@ public class Channel {
         return noteToPlay;
     }
 
+    void setArpeggiator(int i) {
+        if (arpeggiate != i) {
+            arpeggiate = i;
+            RemoteControlBluetoothHelper.setArpeggiator(mConnection, arpeggiate);
+        }
+    }
 }

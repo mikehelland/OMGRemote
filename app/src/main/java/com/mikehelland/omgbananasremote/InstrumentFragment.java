@@ -65,7 +65,15 @@ public class InstrumentFragment extends Fragment {
             @Override
             public void newData(String name, String value) {
                 if ("FRETBOARD_INFO".equals(name)) {
-                    String[] lowhigh = value.split(",");
+
+                    String[] dataParts = value.split("\\|");
+
+                    if (dataParts.length > 1) {
+                        String[] captions = dataParts[1].split(",");
+                        channel.soundsetCaptions = captions;
+                    }
+
+                    String[] lowhigh = dataParts[0].split(",");
                     channel.lowNote = Integer.parseInt(lowhigh[0]);
                     channel.highNote = Integer.parseInt(lowhigh[1]);
                     channel.octave = Integer.parseInt(lowhigh[2]);
@@ -76,7 +84,6 @@ public class InstrumentFragment extends Fragment {
                     }
 
                     ((GuitarView)view).setJam(mJam, channel, mFretboard);
-
 
                     infoReceived++;
                     if (infoReceived == 2)
