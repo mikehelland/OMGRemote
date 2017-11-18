@@ -1,9 +1,9 @@
 package com.mikehelland.omgbananasremote;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -11,6 +11,7 @@ public class MainActivity extends FragmentActivity {
 
     BluetoothFactory mBtf = null;
     BluetoothManager mBT;
+    Jam mJam = new Jam();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

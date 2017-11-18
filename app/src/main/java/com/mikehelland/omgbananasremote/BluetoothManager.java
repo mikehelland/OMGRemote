@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -149,7 +150,7 @@ class BluetoothManager {
         }
     }
 
-    void newData(BluetoothDataCallback callback, BluetoothDataCallback instrumentCallback, String newData) {
+    void newData(List<BluetoothDataCallback> callbacks, String newData) {
 
         // if this doesn't end with semicolon, save it for when it does
         // total nasty hack for now
@@ -162,26 +163,17 @@ class BluetoothManager {
         String newString = partialTransmission + newData;
         partialTransmission = "";
 
-        if (callback != null) {
+        String[] commands = newString.split(";");
+        String[] nvp;
+        String value = "";
+        for (String command : commands) {
+            nvp = command.split("=");
+            if (nvp.length > 1) {
+                value = nvp[1];
+            }
 
-            String[] commands = newString.split(";");
-            for (String command : commands) {
-                String[] nvp = command.split("=");
-                if (nvp.length > 1) {
-                    callback.newData(nvp[0], nvp[1]);
-                    //hacky
-                    if (instrumentCallback != null) {
-                        instrumentCallback.newData(nvp[0], nvp[1]);
-                    }
-
-                }
-                else {
-                    callback.newData(nvp[0], "");
-                    //hacky
-                    if (instrumentCallback != null) {
-                        instrumentCallback.newData(nvp[0], "");
-                    }
-                }
+            for (BluetoothDataCallback callback : callbacks) {
+                callback.newData(nvp[0], value);
             }
         }
     }

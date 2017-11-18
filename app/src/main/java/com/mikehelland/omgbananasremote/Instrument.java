@@ -1,14 +1,12 @@
 package com.mikehelland.omgbananasremote;
 
-/**
- * Created by m on 7/30/16.
- */
-public class Instrument {
+class Instrument {
     int channel;
     String name;
     float volume;
 
     SurfaceType surfaceType;
+    boolean defaultSurface = true;
     boolean chromatic;
 
     enum SurfaceType {

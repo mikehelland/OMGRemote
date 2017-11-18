@@ -2,13 +2,14 @@ package com.mikehelland.omgbananasremote;
 
 import android.view.View;
 
-/**
- * Created by m on 7/14/17.
- */
-
 class PlaybackThread extends Thread {
 
     Jam jam;
+    boolean cancel;
+
+    PlaybackThread(Jam jam) {
+        this.jam = jam;
+    }
 
     public void run() {
 
@@ -18,7 +19,7 @@ class PlaybackThread extends Thread {
         long lastBeatPlayed = System.currentTimeMillis() - jam.subbeatLength;
         long now;
 
-        boolean cancel = false;
+        cancel = false;
 
         jam.playing = true;
 

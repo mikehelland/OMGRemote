@@ -4,23 +4,16 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-public class RemoteControlBluetoothDataCallback extends BluetoothDataCallback {
+class CoreBluetoothDataCallback extends BluetoothDataCallback {
 
     Jam mJam;
-    public RemoteControlBluetoothDataCallback(Jam jam) {
+    CoreBluetoothDataCallback(Jam jam) {
         mJam = jam;
     }
 
     public void newData(String name, String value) {
         Log.d(name, value);
-
-        //This would be if we did all the info as json, instead of individual commands
-        /*if ("JAM_INFO".equals(name)) {
-            setJamInfo(value);
-            return;
-        }*/
 
         if ("JAMINFO_SUBBEATLENGTH".equals(name)) {
             mJam.setSubbeatLength(Integer.parseInt(value));
@@ -60,7 +53,7 @@ public class RemoteControlBluetoothDataCallback extends BluetoothDataCallback {
             //        Integer.parseInt(lowhigh[2]));
 
         }
-        else if ("LAUNCH_DRUMPAD".equals(name)) {;
+        else if ("LAUNCH_DRUMPAD".equals(name)) {
             boolean[][] pattern;
             try {
                 Log.d("MGH launch drumpad", value.substring(value.length() - 20));
@@ -88,7 +81,7 @@ public class RemoteControlBluetoothDataCallback extends BluetoothDataCallback {
 
     }
 
-    void setJamInfo(String value) {
+    /*void setJamInfo(String value) {
         try {
             JSONObject jamInfo = new JSONObject(value);
             mJam.setSubbeatLength(jamInfo.getInt("subbeatLength"));
@@ -99,5 +92,5 @@ public class RemoteControlBluetoothDataCallback extends BluetoothDataCallback {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

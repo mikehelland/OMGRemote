@@ -33,6 +33,12 @@ public class Jam {
     ArrayList<View> viewsToInvalidateOnBeat = new ArrayList<>();
     ArrayList<View> viewsToInvalidateOnNewMeasure = new ArrayList<>();
 
+    PlaybackThread mPlaybackThread = new PlaybackThread(this);
+
+    Jam() {
+        mPlaybackThread.start();
+    }
+
     String getKeyName() {
         return KEY_CAPTIONS[key] + " " + SCALE_CAPTIONS[scaleI];
     }

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ public class RemoteControlFragment extends Fragment {
 
     BluetoothConnection mConnection;
     Jam mJam;
-    PlaybackThread mPlaybackThread;
+    BluetoothDataCallback mDataCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,16 +32,13 @@ public class RemoteControlFragment extends Fragment {
         final Button addChannelButton = (Button)view.findViewById(R.id.add_channel_button);
         final Button playButton = (Button)view.findViewById(R.id.play_button);
 
-        mPlaybackThread = new PlaybackThread();
-        mPlaybackThread.jam = mJam;
-        mPlaybackThread.start();
+        Log.d("MGH RemoteControlF", "on create");
 
         makeInstrumentButtons(instrumentList);
 
-        mConnection.setDataCallback(new RemoteControlBluetoothDataCallback(mJam) {
+        mDataCallback = new BluetoothDataCallback() {
             @Override
             public void newData(String name, String value) {
-                super.newData(name, value);
 
                 if ("JAMINFO_CHANNELS".equals(name)) {
 
@@ -108,7 +106,8 @@ public class RemoteControlFragment extends Fragment {
                 }
 
             }
-        });
+        };
+        mConnection.addDataCallback(mDataCallback);
 
         bpmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +177,7 @@ public class RemoteControlFragment extends Fragment {
             }
         });
 
-        RemoteControlBluetoothHelper.getJamInfo(mConnection);
+        //RemoteControlBluetoothHelper.getJamInfo(mConnection);
         return view;
     }
 
@@ -198,16 +197,31 @@ public class RemoteControlFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onInstrumenClicked(instrument);
+                onInstrumentClicked(instrument);
             }
         });
 
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                showChannelOptions(instrument);
+                return true;
+            }
+        });
         instrumentList.addView(button);
     }
 
-    void onInstrumenClicked(Instrument instrument) {
+    private void onInstrumentClicked(Instrument instrument) {
 
         InstrumentFragment f = new InstrumentFragment();
+        f.mInstrument = instrument;
+        f.mConnection = mConnection;
+        f.mJam = mJam;
+        showFragment(f);
+    }
+
+    private void showChannelOptions(Instrument instrument) {
+        ChannelOptionsFragment f = new ChannelOptionsFragment();
         f.mInstrument = instrument;
         f.mConnection = mConnection;
         f.mJam = mJam;
@@ -256,5 +270,11 @@ public class RemoteControlFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mConnection.removeDataCallback(mDataCallback);
     }
 }

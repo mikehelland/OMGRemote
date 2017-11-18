@@ -60,7 +60,7 @@ public class InstrumentFragment extends Fragment {
     }
 
     void setupInstrumentCallback(final Channel channel, final View view) {
-        mConnection.setInstrumentCallback(new BluetoothDataCallback() {
+        mConnection.addDataCallback(new BluetoothDataCallback() {
             int infoReceived = 0;
             @Override
             public void newData(String name, String value) {
@@ -87,7 +87,7 @@ public class InstrumentFragment extends Fragment {
 
                     infoReceived++;
                     if (infoReceived == 2)
-                        mConnection.setInstrumentCallback(null);
+                        mConnection.removeDataCallback(this);
                 }
                 if ("NOTE_INFO".equals(name)) {
                     Log.d("MGH parse note info", value);
@@ -113,7 +113,7 @@ public class InstrumentFragment extends Fragment {
 
                     infoReceived++;
                     if (infoReceived == 2)
-                        mConnection.setInstrumentCallback(null);
+                        mConnection.removeDataCallback(this);
                 }
             }
         });
@@ -121,7 +121,7 @@ public class InstrumentFragment extends Fragment {
     }
 
     void setupDrumCallback(final DrumChannel drumChannel, final DrumView drumView) {
-        mConnection.setInstrumentCallback(new BluetoothDataCallback() {
+        mConnection.addDataCallback(new BluetoothDataCallback() {
             @Override
             public void newData(String name, String value) {
                 if ("DRUMBEAT_INFO".equals(name)) {
@@ -147,7 +147,7 @@ public class InstrumentFragment extends Fragment {
                             drumView.invalidate();
                         }
                     });
-                    mConnection.setInstrumentCallback(null);
+                    mConnection.removeDataCallback(this);
                 }
             }
         });

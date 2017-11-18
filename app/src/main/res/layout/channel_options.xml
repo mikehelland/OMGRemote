@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#4fa5d5"
+        android:gravity="center"
+        android:textSize="28sp"
+        android:layout_marginTop="10dip"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:text="Choose a Surface Layout"
+        android:layout_alignParentTop="true"
+        android:id="@+id/how_to_connect"
+        />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/surface_list"
+        android:layout_below="@id/how_to_connect"/>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remove Channel"
+        android:id="@+id/remote_channel_button"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

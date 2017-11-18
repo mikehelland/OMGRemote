@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class BluetoothConnection extends Thread {
     private BluetoothDevice mDevice;
@@ -15,8 +16,8 @@ public class BluetoothConnection extends Thread {
     private final OutputStream mmOutStream;
     private final BluetoothSocket socket;
     private BluetoothConnectCallback mConnectedCallback;
-    private BluetoothDataCallback mDataCallback;
-    private BluetoothDataCallback mInstrumentCallback;
+
+    private ArrayList<BluetoothDataCallback> mDataCallbacks = new ArrayList<>();
 
     private final static String TAG = "MGH bluetoothconnection";
 
@@ -79,8 +80,7 @@ public class BluetoothConnection extends Thread {
 
                 //Log.d("MGH", data);
 
-                if (mDataCallback != null)
-                    mBT.newData(mDataCallback, mInstrumentCallback, data);
+                mBT.newData(mDataCallbacks, data);
             }
 
         }
@@ -91,7 +91,7 @@ public class BluetoothConnection extends Thread {
         }
     }
 
-    public void write(byte[] bytes){
+    void write(byte[] bytes){
         try {
             mmOutStream.write(bytes);
         } catch (IOException e) {
@@ -99,7 +99,7 @@ public class BluetoothConnection extends Thread {
         }
     }
 
-    public void writeString(String toWrite){
+    void writeString(String toWrite){
         Log.d("MGH writeString", toWrite);
         try {
             mmOutStream.write(toWrite.getBytes());
@@ -134,15 +134,14 @@ public class BluetoothConnection extends Thread {
         return mDevice;
     }
 
-    public void setDataCallback(BluetoothDataCallback callback) {
-        mDataCallback = callback;
-    }
-
-    public boolean isDisconnected() {
+    boolean isDisconnected() {
         return disconnected;
     }
 
-    public void setInstrumentCallback(BluetoothDataCallback callback) {
-        mInstrumentCallback = callback;
+    void addDataCallback(BluetoothDataCallback callback) {
+        mDataCallbacks.add(callback);
+    }
+    void removeDataCallback(BluetoothDataCallback callback) {
+        mDataCallbacks.remove(callback);
     }
 }

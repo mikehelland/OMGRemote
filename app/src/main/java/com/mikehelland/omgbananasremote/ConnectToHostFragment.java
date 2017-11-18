@@ -152,6 +152,8 @@ public class ConnectToHostFragment extends Fragment {
         RemoteControlFragment f = new RemoteControlFragment();
         f.mConnection = mConnection;
         f.mJam = new Jam();
+        mConnection.addDataCallback(new CoreBluetoothDataCallback(f.mJam));
+        RemoteControlBluetoothHelper.getJamInfo(mConnection);
         showFragment(f);
     }
 
