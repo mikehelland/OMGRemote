@@ -54,7 +54,7 @@ public class InstrumentFragment extends Fragment {
             mView = (View)surfaceView;
         }
 
-        RemoteControlBluetoothHelper.setChannel(mConnection, mInstrument.channel);
+        RemoteControlBluetoothHelper.setChannel(mConnection, mInstrument.channelNumber);
 
         return view;
     }

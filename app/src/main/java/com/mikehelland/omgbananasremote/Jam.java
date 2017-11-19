@@ -125,7 +125,7 @@ public class Jam {
         String[] dataParts = channelData.split(",");
 
         Instrument instrument = new Instrument();
-        instrument.channel = instruments.size();
+        instrument.channelNumber = instruments.size();
         instrument.name = dataParts[3];
         instrument.chromatic = !dataParts[0].equals("0");
         String surfaceType = dataParts[1];

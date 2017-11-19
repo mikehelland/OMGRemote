@@ -1,9 +1,10 @@
 package com.mikehelland.omgbananasremote;
 
 class Instrument {
-    int channel;
+    int channelNumber;
     String name;
     float volume;
+    boolean enabled = true;
 
     SurfaceType surfaceType;
     boolean defaultSurface = true;
@@ -11,5 +12,11 @@ class Instrument {
 
     enum SurfaceType {
         PRESET_SEQUENCER, PRESET_VERTICAL, PRESET_FRETBOARD
+    }
+
+    boolean isEnabled() { return enabled; }
+    boolean toggleEnabled() {
+        enabled = !enabled;
+        return enabled;
     }
 }
