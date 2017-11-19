@@ -145,10 +145,11 @@ public class Jam {
 
     void makeChannels(String value) {
 
-        if (value.length() == 0) return;
-
         synchronized (instruments) {
             instruments.clear();
+
+            if (value.length() == 0) return;
+
             String[] channelsData = value.split("\\|");
             for (String channelData : channelsData) {
                 makeChannel(channelData);

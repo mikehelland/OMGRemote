@@ -164,12 +164,14 @@ class BluetoothManager {
         partialTransmission = "";
 
         String[] commands = newString.split(";");
-        String[] nvp;
         String value = "";
         for (String command : commands) {
-            nvp = command.split("=");
+            String[] nvp = command.split("=");
             if (nvp.length > 1) {
                 value = nvp[1];
+            }
+            else {
+                value = "";
             }
 
             for (BluetoothDataCallback callback : callbacks) {

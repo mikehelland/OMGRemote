@@ -233,6 +233,9 @@ public class GuitarView extends View {
             return result;
         }
 
+        if (fretMapping == null) {
+            return true;
+        }
 
         int action = event.getAction();
         if (action == MotionEvent.ACTION_DOWN) {

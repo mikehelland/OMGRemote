@@ -152,7 +152,11 @@ public class RemoteControlFragment extends Fragment {
                 }
             }
         });
-
+        if (mJam.playing) {
+            playButton.setBackgroundColor(Color.GREEN);
+            playButton.setText("Stop");
+        }
+        
         loadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
