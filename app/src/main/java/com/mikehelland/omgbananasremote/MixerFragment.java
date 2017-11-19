@@ -6,15 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MixerFragment extends Fragment {
 
     private View mView;
 
-    private View oscControls;
+    private List<View> mPanels = new ArrayList<>();
 
     Jam mJam;
 
     BluetoothConnection mConnection;
+    BluetoothDataCallback mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -24,6 +28,23 @@ public class MixerFragment extends Fragment {
                 container, false);
 
         setupPanels(inflater);
+
+        mCallback = new BluetoothDataCallback() {
+            @Override
+            public void newData(String name, String value) {
+                if ("CHANNEL_ENABLED".equals(name)) {
+                    //String[] data  = value.split(",");
+                    //boolean enabled = !data[0].equals("0");
+                    //int channelNumber = Integer.parseInt(data[1]);
+                    //mJam.instruments.get(channelNumber).enabled = enabled;
+
+                    for (View panel : mPanels)
+                        panel.postInvalidate();
+                }
+            }
+        };
+
+        mConnection.addDataCallback(mCallback);
 
         return mView;
     }
@@ -38,12 +59,17 @@ public class MixerFragment extends Fragment {
             controls = inflater.inflate(R.layout.mixer_panel, container, false);
             container.addView(controls);
 
-            ((MixerView) controls.findViewById(R.id.mixer_view)).
-                    setup(mConnection, instrument);
+            MixerView mixerView = (MixerView) controls.findViewById(R.id.mixer_view);
+            mixerView.setup(mConnection, instrument);
 
+            mPanels.add(mixerView);
         }
 
     }
 
+    public void onPause() {
+        super.onPause();
+        mConnection.removeDataCallback(mCallback);
+    }
 }
 

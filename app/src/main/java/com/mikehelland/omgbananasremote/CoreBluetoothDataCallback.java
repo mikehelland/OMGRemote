@@ -47,6 +47,11 @@ class CoreBluetoothDataCallback extends BluetoothDataCallback {
             mJam.makeChannel(value);
         }
 
+        if ("CHANNEL_ENABLED".equals(name)) {
+            String[] data = value.split(",");
+            mJam.instruments.get(Integer.parseInt(data[1])).enabled = !"0".equals(data[0]);
+        }
+
         if ("LAUNCH_FRETBOARD".equals(name)) {
             String[] lowhigh = value.split(",");
             //launchFretboard(Integer.parseInt(lowhigh[0]), Integer.parseInt(lowhigh[1]),

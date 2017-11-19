@@ -126,9 +126,10 @@ public class Jam {
 
         Instrument instrument = new Instrument();
         instrument.channelNumber = instruments.size();
-        instrument.name = dataParts[3];
-        instrument.chromatic = !dataParts[0].equals("0");
-        String surfaceType = dataParts[1];
+        instrument.name = dataParts[4];
+        instrument.enabled = !dataParts[0].equals("0");
+        instrument.chromatic = !dataParts[1].equals("0");
+        String surfaceType = dataParts[2];
         if (surfaceType.startsWith("0"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_SEQUENCER;
         if (surfaceType.startsWith("1"))
@@ -136,7 +137,7 @@ public class Jam {
         if (surfaceType.startsWith("2"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_FRETBOARD;
 
-        instrument.volume = Float.parseFloat(dataParts[2]);
+        instrument.volume = Float.parseFloat(dataParts[3]);
         synchronized (instruments) {
             instruments.add(instrument);
         }
