@@ -105,6 +105,7 @@ public class ConnectToHostFragment extends Fragment {
             return;
         }
 
+        final Jam jam = ((MainActivity)getActivity()).mJam;
 
         mBT.connectTo(device, new BluetoothConnectCallback() {
             @Override
@@ -133,6 +134,9 @@ public class ConnectToHostFragment extends Fragment {
             @Override
             public void onConnected(BluetoothConnection connection) {
                 mConnection = connection;
+                mConnection.addDataCallback(new CoreBluetoothDataCallback(jam));
+                RemoteControlBluetoothHelper.getJamInfo(mConnection);
+
                 if (getActivity() == null)
                     return;
 
@@ -151,9 +155,7 @@ public class ConnectToHostFragment extends Fragment {
     private void showRemoteControlFragment() {
         RemoteControlFragment f = new RemoteControlFragment();
         f.mConnection = mConnection;
-        f.mJam = new Jam();
-        mConnection.addDataCallback(new CoreBluetoothDataCallback(f.mJam));
-        RemoteControlBluetoothHelper.getJamInfo(mConnection);
+        f.mJam = ((MainActivity)getActivity()).mJam;
         showFragment(f);
     }
 

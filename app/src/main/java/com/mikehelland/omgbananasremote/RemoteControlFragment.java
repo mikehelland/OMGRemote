@@ -58,7 +58,7 @@ public class RemoteControlFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            bpmButton.setText(mJam.getBPM() + " bpm");
+                            bpmButton.setText(getResources().getString(R.string.bpm, mJam.getBPM()));
                         }
                     });
                 }
@@ -84,7 +84,7 @@ public class RemoteControlFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            playButton.setText("Stop");
+                            playButton.setText(R.string.stop);
                             playButton.setBackgroundColor(Color.GREEN);
                         }
                     });
@@ -93,7 +93,7 @@ public class RemoteControlFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            playButton.setText("Play");
+                            playButton.setText(R.string.play);
                             playButton.setBackgroundColor(Color.RED);
                         }
                     });
@@ -118,7 +118,7 @@ public class RemoteControlFragment extends Fragment {
                 showFragment(f);
             }
         });
-        bpmButton.setText(mJam.getBPM() + " bpm");
+        bpmButton.setText(getResources().getString(R.string.bpm, mJam.getBPM()));
 
         view.findViewById(R.id.chordprogression_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,9 +154,9 @@ public class RemoteControlFragment extends Fragment {
         });
         if (mJam.playing) {
             playButton.setBackgroundColor(Color.GREEN);
-            playButton.setText("Stop");
+            playButton.setText(R.string.stop);
         }
-        
+
         loadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

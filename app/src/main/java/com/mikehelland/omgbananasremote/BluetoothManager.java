@@ -174,8 +174,15 @@ class BluetoothManager {
                 value = "";
             }
 
-            for (BluetoothDataCallback callback : callbacks) {
-                callback.newData(nvp[0], value);
+            BluetoothDataCallback callback;
+            for (int i = callbacks.size() - 1; i >= 0; i--) {
+                callback = callbacks.get(i);
+                if (callback.finished) {
+                    callbacks.remove(callback);
+                }
+                else {
+                    callback.newData(nvp[0], value);
+                }
             }
         }
     }

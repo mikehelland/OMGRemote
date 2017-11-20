@@ -7,5 +7,8 @@
     <string name="connected">Connected</string>
     <string name="looking_for_default_host">Looking for default host...</string>
     <string name="device_not_paired">Device %s is not paired</string>
+    <string name="stop">Stop</string>
+    <string name="play">Play</string>
+    <string name="bpm">%1d BPM</string>
 
 </resources>

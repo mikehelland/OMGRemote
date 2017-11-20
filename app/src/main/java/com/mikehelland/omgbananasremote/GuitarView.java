@@ -297,6 +297,7 @@ public class GuitarView extends View {
             touchingFret = -1;
             lastFret = -1;
 
+            mChannel.setArpeggiator(0);
         }
 
         invalidate();

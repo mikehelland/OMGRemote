@@ -142,6 +142,6 @@ public class BluetoothConnection extends Thread {
         mDataCallbacks.add(callback);
     }
     void removeDataCallback(BluetoothDataCallback callback) {
-        mDataCallbacks.remove(callback);
+        callback.finished = true;
     }
 }
