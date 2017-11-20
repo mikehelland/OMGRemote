@@ -1,9 +1,9 @@
 package com.mikehelland.omgbananasremote;
 
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +26,7 @@ public class AcceptConnectionFragment extends Fragment {
 
         //getActivityMembers();
         final MainActivity activity = (MainActivity)getActivity();
-        BluetoothFactory btf = activity.mBtf;
+        BluetoothFactory btf = null;//activity.mBtf;
 
         final TextView statusView = (TextView)view.findViewById(R.id.bt_status);
 

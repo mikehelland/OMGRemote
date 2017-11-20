@@ -9,7 +9,6 @@ import android.view.WindowManager;
 
 public class MainActivity extends FragmentActivity {
 
-    BluetoothFactory mBtf = null;
     BluetoothManager mBT;
     Jam mJam = new Jam();
 
@@ -17,7 +16,6 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBtf = new BluetoothFactory(this);
         mBT = new BluetoothManager(this);
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -38,6 +36,6 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onPause() {
         super.onPause();
-        mBtf.cleanUp();
+        mBT.cleanUp();
     }
 }
