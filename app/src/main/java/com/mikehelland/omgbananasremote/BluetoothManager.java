@@ -152,6 +152,7 @@ class BluetoothManager {
 
     void newData(List<BluetoothDataCallback> callbacks, String newData) {
 
+        boolean removeFinishedCallbacks = false;
         // if this doesn't end with semicolon, save it for when it does
         // total nasty hack for now
 
@@ -169,19 +170,24 @@ class BluetoothManager {
             String[] nvp = command.split("=");
             if (nvp.length > 1) {
                 value = nvp[1];
-            }
-            else {
+            } else {
                 value = "";
             }
 
-            BluetoothDataCallback callback;
-            for (int i = callbacks.size() - 1; i >= 0; i--) {
-                callback = callbacks.get(i);
+            for (BluetoothDataCallback callback : callbacks) {
                 if (callback.finished) {
-                    callbacks.remove(callback);
-                }
-                else {
+                    removeFinishedCallbacks = true;
+                } else {
                     callback.newData(nvp[0], value);
+                }
+            }
+
+            if (removeFinishedCallbacks) {
+                BluetoothDataCallback callback;
+                for (int i = callbacks.size() - 1; i >= 0; i--) {
+                    callback = callbacks.get(i);
+                    if (callback.finished)
+                        callbacks.remove(callback);
                 }
             }
         }
