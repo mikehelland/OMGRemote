@@ -48,4 +48,8 @@ class RemoteControlBluetoothHelper {
     static void setArpeggiator(BluetoothConnection connection, int arpeggiate) {
         connection.writeString("SET_ARPEGGIATOR=" + Integer.toString(arpeggiate) + ";");
     }
+
+    static void clearChannel(BluetoothConnection connection, int channel) {
+        connection.writeString("CLEAR_CHANNEL=" + channel + ";");
+    }
 }

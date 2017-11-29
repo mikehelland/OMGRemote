@@ -19,17 +19,27 @@
         android:id="@+id/how_to_connect"
         />
 
-    <ListView
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/surface_list"
-        android:layout_below="@id/how_to_connect"/>
+        android:layout_height="wrap_content"
+        android:text="Remove Channel"
+        android:id="@+id/remove_channel_button"
+        android:layout_alignParentBottom="true"/>
 
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Remove Channel"
-        android:id="@+id/remote_channel_button"
-        android:layout_alignParentBottom="true"/>
+        android:text="Clear Channel"
+        android:id="@+id/clear_channel_button"
+        android:layout_above="@id/remove_channel_button"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/surface_list"
+        android:layout_below="@id/how_to_connect"
+        android:layout_above="@id/clear_channel_button"/>
+
+
 </RelativeLayout>
