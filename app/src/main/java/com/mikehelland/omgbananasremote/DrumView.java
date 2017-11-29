@@ -112,7 +112,7 @@ public class DrumView extends View {
                 boxWidth, height,
                 topPanelPaint);
 
-        if (mChannel.enabled)
+        if (mChannel.isEnabled())
             paintBeat.setARGB(255, 0, 255, 0);
         else
             paintBeat.setARGB(255, 255, 0, 0);
@@ -271,9 +271,9 @@ public class DrumView extends View {
 
     public void setCaptions() {
 
-        captionWidths = new float[8][];
-        captions = new String[8][];
         String[] caps = mChannel.getCaptions();
+        captionWidths = new float[caps.length][];
+        captions = new String[caps.length][];
         for (int i = 0; i < caps.length; i++) {
 
             captions[i] = caps[i].split(" ");

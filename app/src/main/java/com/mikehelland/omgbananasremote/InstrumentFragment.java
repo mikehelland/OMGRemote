@@ -36,13 +36,13 @@ public class InstrumentFragment extends Fragment {
             view = inflater.inflate(R.layout.drum_fragment,
                     container, false);
 
-            final DrumChannel drumChannel = new DrumChannel(mConnection);
+            final DrumChannel drumChannel = new DrumChannel(mConnection, mInstrument);
 
             final DrumView drumView = (DrumView)view.findViewById(R.id.drummachine);
             drumView.setJam(mJam, drumChannel);
 
             setupDrumCallback(drumChannel, drumView);
-            mView = (View)drumView;
+            mView = drumView;
         }
         else {
             view = inflater.inflate(R.layout.instrument,
@@ -51,7 +51,7 @@ public class InstrumentFragment extends Fragment {
 
             surfaceView = (GuitarView) view.findViewById(R.id.drummachine);
             setupInstrumentCallback(channel, surfaceView);
-            mView = (View)surfaceView;
+            mView = surfaceView;
         }
 
         RemoteControlBluetoothHelper.setChannel(mConnection, mInstrument.channelNumber);

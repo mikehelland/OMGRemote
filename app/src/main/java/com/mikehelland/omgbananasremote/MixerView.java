@@ -21,7 +21,6 @@ public class MixerView extends View {
     private Paint paintGreen;
 
     private int width = -1;
-    private int width2 = -1;
     private int height = -1;
 
     private Instrument mChannel;
@@ -38,9 +37,6 @@ public class MixerView extends View {
     private int touchingArea = TOUCHING_AREA_NONE;
 
     private String channelName = "";
-    private float channelNameWidth2;
-
-    private int labelTextSize = 36;
 
     private float volume = 0.5f;
     private float pan = 0.0f;
@@ -61,7 +57,7 @@ public class MixerView extends View {
 
         paintText = new Paint();
         paintText.setARGB(255, 255, 255, 255);
-        paintText.setTextSize(labelTextSize);
+        paintText.setTextSize(36);
 
         paintBlue = new Paint();
         paintBlue.setARGB(128, 0, 0, 255);
@@ -86,15 +82,12 @@ public class MixerView extends View {
 
     public void setChannelName(String newChannelName) {
         channelName = newChannelName;
-        channelNameWidth2 = paintText.measureText(channelName) / 2;
-
     }
 
     public void onDraw(Canvas canvas) {
         if (height == -1) {
             width = getWidth();
             height = getHeight();
-            width2 = width / 2;
 
             muteButtonWidth = paintText.measureText(" Mute ");
             volumeStart = muteButtonWidth + controlMargin;

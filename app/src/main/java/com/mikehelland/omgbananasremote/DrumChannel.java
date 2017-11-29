@@ -1,20 +1,19 @@
 package com.mikehelland.omgbananasremote;
 
-public class DrumChannel {
+class DrumChannel {
 
     private BluetoothConnection mConnection;
-    boolean enabled = false;
+    private Instrument mInstrument;
 
     String[] captions = {"1", "2", "3", "4", "5", "6", "7", "8"};
     boolean[][] pattern = new boolean[8][32];
 
-    public DrumChannel(BluetoothConnection connection) {
-
+    DrumChannel(BluetoothConnection connection, Instrument instrument) {
         mConnection = connection;
-
+        mInstrument = instrument;
     }
 
-    public void setPattern(int track, int subbeat, boolean value) {
+    void setPattern(int track, int subbeat, boolean value) {
         pattern[track][subbeat] = value; //super.setPattern(track, subbeat, value);
 
         mConnection.writeString("CHANNEL_SET_PATTERN=" + track + "," + subbeat + "," + value + ";");
@@ -29,4 +28,7 @@ public class DrumChannel {
         return pattern[track];
     }
 
+    boolean isEnabled() {
+        return mInstrument != null && mInstrument.isEnabled();
+    }
 }

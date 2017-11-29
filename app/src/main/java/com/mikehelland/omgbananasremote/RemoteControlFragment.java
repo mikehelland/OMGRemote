@@ -195,6 +195,7 @@ public class RemoteControlFragment extends Fragment {
 
     void makeInstrumentButton(final Instrument instrument, ViewGroup instrumentList) {
         Button button = new Button(getContext());
+        button.setTextSize(22);
         button.setText(instrument.name);
         button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
 
