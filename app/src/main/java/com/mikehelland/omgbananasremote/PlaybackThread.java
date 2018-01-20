@@ -33,7 +33,7 @@ class PlaybackThread extends Thread {
             if (jam.timeSinceLast < jam.subbeatLength) {
                 if (!hasSlept) {
                     try {
-                        Thread.sleep(jam.subbeatLength / 10 * 9);
+                        Thread.sleep(jam.subbeatLength - 50);
                     }
                     catch (InterruptedException e) {
                         e.printStackTrace();
