@@ -133,9 +133,10 @@ public class InstrumentFragment extends Fragment {
 
                         data = tracks[i].split("\\|");
                         drumChannel.captions[i] = data[0];
-                        for (int j = 1; j < data.length; j++) {
-
-                            drumChannel.pattern[i][j - 1] = !data[j].equals("0");
+                        for (int j = 1; j < drumChannel.pattern.length; j++) {
+                            if (j < data.length) {
+                                drumChannel.pattern[i][j - 1] = !data[j].equals("0");
+                            }
                         }
                     }
 

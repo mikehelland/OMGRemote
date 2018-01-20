@@ -23,6 +23,7 @@ class PlaybackThread extends Thread {
 
         jam.playing = true;
 
+        boolean hasSlept = false;
 
         while (!cancel) {
 
@@ -30,8 +31,18 @@ class PlaybackThread extends Thread {
             jam.timeSinceLast = now - lastBeatPlayed;
 
             if (jam.timeSinceLast < jam.subbeatLength) {
+                if (!hasSlept) {
+                    try {
+                        Thread.sleep(jam.subbeatLength / 10 * 9);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 continue;
             }
+
+            hasSlept = true;
 
             //lastBeatPlayed = now;
             lastBeatPlayed += jam.subbeatLength;

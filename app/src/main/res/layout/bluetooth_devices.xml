@@ -14,7 +14,7 @@
         android:layout_marginTop="10dip"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:text="Choose a Device"
+        android:text="Paired Devices"
         android:layout_alignParentTop="true"
         android:id="@+id/how_to_connect"
         />
