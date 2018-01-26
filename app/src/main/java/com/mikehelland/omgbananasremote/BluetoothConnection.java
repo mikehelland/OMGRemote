@@ -7,7 +7,8 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BluetoothConnection extends Thread {
     private BluetoothDevice mDevice;
@@ -17,7 +18,7 @@ public class BluetoothConnection extends Thread {
     private final BluetoothSocket socket;
     private BluetoothConnectCallback mConnectedCallback;
 
-    private ArrayList<BluetoothDataCallback> mDataCallbacks = new ArrayList<>();
+    private List<BluetoothDataCallback> mDataCallbacks = new CopyOnWriteArrayList<>();
 
     private final static String TAG = "MGH bluetoothconnection";
 
@@ -142,6 +143,6 @@ public class BluetoothConnection extends Thread {
         mDataCallbacks.add(callback);
     }
     void removeDataCallback(BluetoothDataCallback callback) {
-        callback.finished = true;
+        mDataCallbacks.remove(callback);
     }
 }

@@ -175,19 +175,8 @@ class BluetoothManager {
             }
 
             for (BluetoothDataCallback callback : callbacks) {
-                if (callback.finished) {
-                    removeFinishedCallbacks = true;
-                } else {
+                if (callback != null) {
                     callback.newData(nvp[0], value);
-                }
-            }
-
-            if (removeFinishedCallbacks) {
-                BluetoothDataCallback callback;
-                for (int i = callbacks.size() - 1; i >= 0; i--) {
-                    callback = callbacks.get(i);
-                    if (callback.finished)
-                        callbacks.remove(callback);
                 }
             }
         }

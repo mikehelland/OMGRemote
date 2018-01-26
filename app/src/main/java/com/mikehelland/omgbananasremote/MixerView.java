@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * User: m
@@ -43,10 +44,14 @@ public class MixerView extends View {
 
     private float muteButtonWidth = -1;
     private float volumeStart = -1;
-    private float controlMargin = 5;
+    private final static float controlMargin = 5;
     private float volumeWidth = -1;
     private float panStart = -1;
     private float panWidth = -1;
+
+    private long touchedMuteAt = 0l;
+
+    final static private float volumeViewWeight = 0.65f;
 
     public MixerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -91,7 +96,7 @@ public class MixerView extends View {
 
             muteButtonWidth = paintText.measureText(" Mute ");
             volumeStart = muteButtonWidth + controlMargin;
-            volumeWidth = (width - volumeStart) * 0.75f - 2 * controlMargin;
+            volumeWidth = (width - volumeStart) * volumeViewWeight - 2 * controlMargin;
             panStart = volumeStart + volumeWidth + controlMargin;
             panWidth = width - panStart - controlMargin;
         }
@@ -152,6 +157,20 @@ public class MixerView extends View {
                 mConnection.writeString("SET_CHANNEL_ENABLED=" +
                         (mChannel.isEnabled()?"1":"0") + "," + mChannel.channelNumber + ";");
                 touchingArea = TOUCHING_AREA_MUTE;
+                touchedMuteAt = System.currentTimeMillis();
+                final long thisMute = touchedMuteAt;
+
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                if (touchingArea == TOUCHING_AREA_MUTE &&
+                                        touchedMuteAt == thisMute) {
+                                    Toast.makeText(getContext(), "Channel Cleared!", Toast.LENGTH_SHORT).show();
+                                    mConnection.writeString("CLEAR_CHANNEL=" + mChannel.channelNumber + ";");
+                                }
+                            }
+                        },
+                        1200);
             }
             else if (x <= volumeStart + volumeWidth) {
                 touchingArea = TOUCHING_AREA_VOLUME;

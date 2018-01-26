@@ -2,6 +2,7 @@ package com.mikehelland.omgbananasremote;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ public class InstrumentFragment extends Fragment {
     Fretboard mFretboard = null;
 
     View mView;
+
+    private BluetoothDataCallback mDataCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +56,7 @@ public class InstrumentFragment extends Fragment {
             setupInstrumentCallback(channel, surfaceView);
             mView = surfaceView;
         }
+        mConnection.addDataCallback(mDataCallback);
 
         RemoteControlBluetoothHelper.setChannel(mConnection, mInstrument.channelNumber);
 
@@ -60,17 +64,24 @@ public class InstrumentFragment extends Fragment {
     }
 
     void setupInstrumentCallback(final Channel channel, final View view) {
-        mConnection.addDataCallback(new BluetoothDataCallback() {
-            int infoReceived = 0;
+        mDataCallback = new BluetoothDataCallback() {
+
             @Override
             public void newData(String name, String value) {
+
+                if ("JAMINFO_CHANNELS".equals(name)) {
+                    FragmentManager fm = getFragmentManager();
+                    if (fm != null && fm.getBackStackEntryCount() > 1) {
+                        fm.popBackStack();
+                    }
+                }
+
                 if ("FRETBOARD_INFO".equals(name)) {
 
                     String[] dataParts = value.split("\\|");
 
                     if (dataParts.length > 1) {
-                        String[] captions = dataParts[1].split(",");
-                        channel.soundsetCaptions = captions;
+                        channel.soundsetCaptions = dataParts[1].split(",");
                     }
 
                     String[] lowhigh = dataParts[0].split(",");
@@ -85,9 +96,6 @@ public class InstrumentFragment extends Fragment {
 
                     ((GuitarView)view).setJam(mJam, channel, mFretboard);
 
-                    infoReceived++;
-                    if (infoReceived == 2)
-                        mConnection.removeDataCallback(this);
                 }
                 if ("NOTE_INFO".equals(name)) {
                     Log.d("MGH parse note info", value);
@@ -96,34 +104,36 @@ public class InstrumentFragment extends Fragment {
                         String[] noteStrings = value.split(",");
 
                         Note note;
-                        channel.noteList = new ArrayList<Note>();
+                        channel.noteList = new ArrayList<>();
 
-                        for (int i = 0; i < noteStrings.length; i++) {
+                        for (String noteString : noteStrings) {
                             note = new Note();
-                            note.setRest(noteStrings[i].startsWith("-"));
-                            String[] noteData = noteStrings[i].split("\\|");
+                            note.setRest(noteString.startsWith("-"));
+                            String[] noteData = noteString.split("\\|");
                             note.setBeats(Math.abs(Double.parseDouble(noteData[0])));
                             note.setInstrumentNote(Integer.parseInt(noteData[1]));
                             channel.noteList.add(note);
                         }
 
                         ((GuitarView)view).setJam(mJam, channel, mFretboard);
-
                     }
-
-                    infoReceived++;
-                    if (infoReceived == 2)
-                        mConnection.removeDataCallback(this);
                 }
             }
-        });
-
+        };
     }
 
     void setupDrumCallback(final DrumChannel drumChannel, final DrumView drumView) {
-        mConnection.addDataCallback(new BluetoothDataCallback() {
+        mDataCallback = new BluetoothDataCallback() {
             @Override
             public void newData(String name, String value) {
+
+                if ("JAMINFO_CHANNELS".equals(name)) {
+                    FragmentManager fm = getFragmentManager();
+                    if (fm != null && fm.getBackStackEntryCount() > 1) {
+                        fm.popBackStack();
+                    }
+                }
+
                 if ("DRUMBEAT_INFO".equals(name)) {
                     String[] tracks = value.split(",");
                     drumChannel.pattern = new boolean[tracks.length][mJam.getTotalSubbeats()];
@@ -141,23 +151,15 @@ public class InstrumentFragment extends Fragment {
                     }
 
                     drumView.setJam(mJam, drumChannel);
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            drumView.invalidate();
-                        }
-                    });
-                    mConnection.removeDataCallback(this);
+                    drumView.postInvalidate();
                 }
             }
-        });
-
-
+        };
     }
 
     public void onPause() {
         super.onPause();
         mJam.viewsToInvalidateOnBeat.remove(mView);
+        mConnection.removeDataCallback(mDataCallback);
     }
 }

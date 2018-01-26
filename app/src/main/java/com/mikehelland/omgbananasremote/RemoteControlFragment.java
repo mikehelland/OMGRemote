@@ -41,11 +41,6 @@ public class RemoteControlFragment extends Fragment {
             public void newData(String name, String value) {
 
                 if ("JAMINFO_CHANNELS".equals(name)) {
-
-                    if (getFragmentManager().getBackStackEntryCount() > 1) {
-                        getFragmentManager().popBackStack();
-                    }
-
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
