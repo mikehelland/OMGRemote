@@ -69,9 +69,11 @@ public class RemoteControlFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            makeInstrumentButton(
-                                    mJam.instruments.get(mJam.instruments.size() - 1),
-                                    instrumentList);
+                            try { //a jaminfo_channels command might have removed the new_channel already
+                                makeInstrumentButton(
+                                        mJam.instruments.get(mJam.instruments.size() - 1),
+                                        instrumentList);
+                            } catch (Exception e) {e.printStackTrace();}
                         }
                     });
                 }
@@ -104,9 +106,13 @@ public class RemoteControlFragment extends Fragment {
         };
         mConnection.addDataCallback(mDataCallback);
 
+        //I want to focus on the instruments for the latest monkey tests
+        final boolean monkeyTest = ((MainActivity)getActivity()).MONKEY_TEST;
+
         bpmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (monkeyTest) return;
                 BPMFragment f = new BPMFragment();
                 f.mConnection = mConnection;
                 f.mJam = mJam;
@@ -118,6 +124,7 @@ public class RemoteControlFragment extends Fragment {
         view.findViewById(R.id.chordprogression_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (monkeyTest) return;
                 ChordFragment f = new ChordFragment();
                 f.mConnection = mConnection;
                 f.mJam = mJam;
@@ -128,6 +135,7 @@ public class RemoteControlFragment extends Fragment {
         keyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (monkeyTest) return;
                 KeyFragment f = new KeyFragment();
                 f.mConnection = mConnection;
                 f.mJam = mJam;
@@ -169,6 +177,7 @@ public class RemoteControlFragment extends Fragment {
         view.findViewById(R.id.mixer_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (monkeyTest) return;
                 MixerFragment f = new MixerFragment();
                 f.mConnection = mConnection;
                 f.mJam = mJam;
@@ -181,10 +190,8 @@ public class RemoteControlFragment extends Fragment {
     }
 
     void makeInstrumentButtons(ViewGroup instrumentList) {
-        synchronized (mJam.instruments) {
-            for (final Instrument instrument : mJam.instruments) {
-                makeInstrumentButton(instrument, instrumentList);
-            }
+        for (final Instrument instrument : mJam.instruments) {
+            makeInstrumentButton(instrument, instrumentList);
         }
     }
 
@@ -212,6 +219,7 @@ public class RemoteControlFragment extends Fragment {
     }
 
     private void onInstrumentClicked(Instrument instrument) {
+        //if (MainActivity.MONKEY_TEST && instrument.surfaceType != Instrument.SurfaceType.PRESET_SEQUENCER) return;
 
         InstrumentFragment f = new InstrumentFragment();
         f.mInstrument = instrument;

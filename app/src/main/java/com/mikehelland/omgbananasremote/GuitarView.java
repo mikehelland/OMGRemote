@@ -459,7 +459,13 @@ public class GuitarView extends View {
 
             draw_y = getHeight() / 2;
             if (!draw_note.isRest()) {
-                draw_y = (frets - 1 - noteMapping[draw_note.getInstrumentNote()]) * boxHeight;
+                if (draw_note.getInstrumentNote() > -1 && draw_note.getInstrumentNote() < noteMapping.length) {
+                    draw_y = (frets - 1 - noteMapping[draw_note.getInstrumentNote()]) * boxHeight;
+                }
+                else {
+                    Log.e("MGH GuitarView onDraw", "invalid note mapping: length=" +
+                            noteMapping.length + "; index=" + draw_note.getInstrumentNote());
+                }
             }
 
             draw_x = draw_beatWidth * (float)beatsUsed * 4.0f;

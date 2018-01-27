@@ -8,9 +8,14 @@ class DrumChannel {
     String[] captions = {"1", "2", "3", "4", "5", "6", "7", "8"};
     boolean[][] pattern = new boolean[8][32];
 
+    String name = "";
+
     DrumChannel(BluetoothConnection connection, Instrument instrument) {
         mConnection = connection;
         mInstrument = instrument;
+        if (mInstrument != null) {
+            name = mInstrument.name;
+        }
     }
 
     void setPattern(int track, int subbeat, boolean value) {
