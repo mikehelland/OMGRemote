@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 class BluetoothManager {
 
@@ -34,7 +35,7 @@ class BluetoothManager {
 
     private BluetoothReadyCallback readyCallback;
 
-    private ArrayList<BluetoothConnection> connectionThreads = new ArrayList<>();
+    private List<BluetoothConnection> connectionThreads = new CopyOnWriteArrayList<>();
     private BluetoothAcceptThread acceptThread;
 
     private String partialTransmission = "";
@@ -182,16 +183,14 @@ class BluetoothManager {
         }
     }
 
-    ArrayList<BluetoothDevice> getPairedDevices() {
+    List<BluetoothDevice> getPairedDevices() {
         Set<BluetoothDevice> set = mBluetooth.getBondedDevices();
-        ArrayList<BluetoothDevice> list = new ArrayList<>();
-        for (BluetoothDevice device : set) {
-            list.add(device);
-        }
+        List<BluetoothDevice> list = new ArrayList<>();
+        list.addAll(set);
         return list;
     }
 
-    ArrayList<BluetoothConnection> getConnections() {
+    List<BluetoothConnection> getConnections() {
         return connectionThreads;
     }
 

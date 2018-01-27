@@ -26,7 +26,7 @@ public class AcceptConnectionFragment extends Fragment {
 
         //getActivityMembers();
         final MainActivity activity = (MainActivity)getActivity();
-        BluetoothFactory btf = null;//activity.mBtf;
+        BluetoothManager btf = null;//activity.mBtf;
 
         final TextView statusView = (TextView)view.findViewById(R.id.bt_status);
 
@@ -49,7 +49,7 @@ public class AcceptConnectionFragment extends Fragment {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (status.equals(BluetoothFactory.STATUS_IO_CONNECTED_THREAD)) {
+                        if (status.equals(BluetoothManager.STATUS_IO_CONNECTED_THREAD)) {
                             spinningImage.setImageResource(R.drawable.device);
                             statusView.setText(R.string.accepting_connections);
                             int stackCount = getFragmentManager().getBackStackEntryCount();

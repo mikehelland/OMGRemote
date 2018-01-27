@@ -2,9 +2,8 @@ package com.mikehelland.omgbananasremote;
 
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Jam {
     static String[] KEY_CAPTIONS = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
@@ -20,7 +19,7 @@ public class Jam {
     long timeSinceLast = 0;
 
 
-    final List<Instrument> instruments = Collections.synchronizedList(new ArrayList<Instrument>());
+    final List<Instrument> instruments = new CopyOnWriteArrayList<>();
 
     private int[] ascale;
     private int scaleI;
@@ -30,8 +29,8 @@ public class Jam {
     //TODO what about this? Update this
     private int currentChord = 0;
 
-    ArrayList<View> viewsToInvalidateOnBeat = new ArrayList<>();
-    ArrayList<View> viewsToInvalidateOnNewMeasure = new ArrayList<>();
+    List<View> viewsToInvalidateOnBeat = new CopyOnWriteArrayList<>();
+    List<View> viewsToInvalidateOnNewMeasure = new CopyOnWriteArrayList<>();
 
     PlaybackThread mPlaybackThread = new PlaybackThread(this);
 

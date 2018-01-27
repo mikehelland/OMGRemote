@@ -164,12 +164,16 @@ public class GuitarView extends View {
 
     public void onDraw(Canvas canvas) {
 
-        if (frets == 0)
+        if (frets == 0 || mChannel == null)
             return;
 
         if (mFretboard != null) {
             mFretboard.onDraw(canvas, getWidth(), getHeight());
             Log.d("MGH", "return from onDraw");
+            return;
+        }
+
+        if (fretMapping == null || fretMapping.length == 0) {
             return;
         }
 
@@ -190,9 +194,16 @@ public class GuitarView extends View {
 
         int noteNumber;
 
+        int index;
         for (int fret = 1 ; fret <= showingFrets; fret++) {
 
-            noteNumber = fretMapping[fret - 1 + skipBottom + zoomingSkipBottom];
+            index = fret - 1 + skipBottom + zoomingSkipBottom;
+            if (index < 0 || index >= fretMapping.length) {
+                Log.e("MGH GuitarView onDraw", "Invalid note Index: " +
+                    "fret: " + fret + ", skipBottom: " + skipBottom + ", zoomingSkipBottom: " + zoomingSkipBottom);
+                continue;
+            }
+            noteNumber = fretMapping[index];
 
             if (noteNumber % 12 == key) {
                 canvas.drawRect(width / 4, height - fret * boxHeight,
@@ -236,13 +247,17 @@ public class GuitarView extends View {
 
     public boolean onTouchEvent(MotionEvent event) {
 
+        if (mChannel == null) {
+            return true;
+        }
+
         if (mFretboard != null) {
             boolean result = mFretboard.onTouchEvent(event);
             invalidate();
             return result;
         }
 
-        if (fretMapping == null) {
+        if (fretMapping == null || fretMapping.length == 0) {
             return true;
         }
 
@@ -252,6 +267,7 @@ public class GuitarView extends View {
         }
 
         int action = event.getAction();
+        int fretThatsShowing;
         if (action == MotionEvent.ACTION_DOWN) {
 
             if (!modified) {
@@ -268,10 +284,18 @@ public class GuitarView extends View {
             lastFret = touchingFret;
             Note note = new Note();
             note.setBasicNote(skipBottom + touchingFret - rootFret);
-            note.setScaledNote(fretMapping[skipBottom + touchingFret]);
-            note.setInstrumentNote(fretMapping[skipBottom + touchingFret] - lowNote);
-            mChannel.playLiveNote(note);
-            mChannel.setArpeggiator(touchingString);
+            fretThatsShowing = skipBottom + touchingFret;
+            if (fretThatsShowing > -1 && fretThatsShowing < fretMapping.length) {
+                note.setScaledNote(fretMapping[fretThatsShowing]);
+                note.setInstrumentNote(fretMapping[fretThatsShowing] - lowNote);
+                mChannel.playLiveNote(note);
+                mChannel.setArpeggiator(touchingString);
+            }
+            else {
+                Log.e("MGH GuitarView OnDraw", "Invalid fretmapping. skipBottom: " +
+                    skipBottom +", touchingFret: " + touchingFret + ", fretMapping.length: " +
+                    fretMapping.length + " in soundset: " + mChannel.name);
+            }
         }
 
         if (action == MotionEvent.ACTION_MOVE) {
@@ -287,10 +311,17 @@ public class GuitarView extends View {
                     lastFret = touchingFret;
                     Note note = new Note();
                     note.setBasicNote(skipBottom + touchingFret - rootFret);
-                    note.setScaledNote(fretMapping[skipBottom + touchingFret]);
-                    note.setInstrumentNote(fretMapping[skipBottom + touchingFret] - lowNote);
-                    mChannel.playLiveNote(note);
-
+                    fretThatsShowing = skipBottom + touchingFret;
+                    if (fretThatsShowing > -1 && fretThatsShowing < fretMapping.length) {
+                        note.setScaledNote(fretMapping[fretThatsShowing]);
+                        note.setInstrumentNote(fretMapping[fretThatsShowing] - lowNote);
+                        mChannel.playLiveNote(note);
+                    }
+                    else {
+                        Log.e("MGH GuitarView OnDraw", "Invalid fretmapping. skipBottom: " +
+                                skipBottom +", touchingFret: " + touchingFret + ", fretMapping.length: " +
+                                fretMapping.length + " in soundset: " + mChannel.name);
+                    }
                 }
                 mChannel.setArpeggiator(touchingString);
 

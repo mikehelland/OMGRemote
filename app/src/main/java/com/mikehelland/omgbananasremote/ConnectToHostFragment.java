@@ -116,7 +116,7 @@ public class ConnectToHostFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (status.equals(BluetoothFactory.STATUS_IO_CONNECTED_THREAD)) {
+                        if (status.equals(BluetoothManager.STATUS_IO_CONNECTED_THREAD)) {
                             mImageView.setImageResource(R.drawable.device);
                             mStatusText.setText(R.string.accepting_connections);
                             int stackCount = getFragmentManager().getBackStackEntryCount();

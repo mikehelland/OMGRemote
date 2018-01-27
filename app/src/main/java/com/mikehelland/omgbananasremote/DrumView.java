@@ -3,6 +3,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -138,6 +139,15 @@ public class DrumView extends View {
 
         for (int j = 0; j < tall; j++) {
 
+            if (captionWidths == null) {
+                Log.d("MGH DrumView onDraw", "captionsWidth is null");
+                break;
+            }
+            if (captionWidths[j] == null) {
+                Log.d("MGH DrumView onDraw", "captionsWidth[" + j + "] is null");
+                break;
+            }
+
             if (captionWidths[j].length == 1) {
                 canvas.drawText(captions[j][0], boxWidth / 2 - captionWidths[j][0] / 2,
                         j * boxHeight + boxHeight / 2 + 6, blackPaint);
@@ -149,7 +159,8 @@ public class DrumView extends View {
             }
 
             for (int i = 0; i < wide; i++) {
-
+                Log.d("MGH dv firstRowButton","" + firstRowButton );
+                Log.d("MGH dv i, j, wide",i + ", " + j + ", " + wide);
                 on = (firstRowButton == -1) ? data[j][i] : trackData[i + j * wide];
 
                 canvas.drawRect(boxWidth + boxWidth * i + marginX,  j * boxHeight + marginY,
