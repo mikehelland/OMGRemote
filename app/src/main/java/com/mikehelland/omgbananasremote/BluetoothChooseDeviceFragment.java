@@ -3,6 +3,7 @@ package com.mikehelland.omgbananasremote;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,10 @@ public class BluetoothChooseDeviceFragment extends Fragment {
 
         if (mCallback != null) {
             mCallback.run(mPairedList.get(i));
-            getFragmentManager().popBackStack();
+            FragmentManager fm = getFragmentManager();
+            if (fm != null) {
+                getFragmentManager().popBackStack();
+            }
         }
     }
 

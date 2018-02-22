@@ -190,6 +190,9 @@ public class RemoteControlFragment extends Fragment {
     }
 
     void makeInstrumentButtons(ViewGroup instrumentList) {
+        if (mJam == null) {
+            return;
+        }
         for (final Instrument instrument : mJam.instruments) {
             makeInstrumentButton(instrument, instrumentList);
         }

@@ -9,14 +9,14 @@ import android.view.WindowManager;
 
 public class MainActivity extends FragmentActivity {
 
-    final static boolean MONKEY_TEST = true;
+    final static boolean MONKEY_TEST = false;
     BluetoothManager mBT;
     Jam mJam = new Jam();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-String[] as = "".split(" ");
+
         mBT = new BluetoothManager(this);
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);

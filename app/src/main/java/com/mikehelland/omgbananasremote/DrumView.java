@@ -40,6 +40,7 @@ public class DrumView extends View {
 
     private String[][] captions;
     private float[][] captionWidths;
+    private int captionHeight;
 
     private Paint paintBeat;
 
@@ -95,9 +96,6 @@ public class DrumView extends View {
             return;
         }
 
-        int otall = tall;
-        int owide = wide;
-
         if (height != getHeight()) {
             width = getWidth();
             height = getHeight();
@@ -143,34 +141,24 @@ public class DrumView extends View {
             }
         }
 
+        if (captions != null && captions.length > 0 && captionWidths != null && captionWidths.length > 0) {
+            captionHeight = height / captions.length;
+            for (int j = 0; j < captions.length; j++) {
+                if (j < captions.length && j < captionWidths.length) {
+                    if (captionWidths[j].length == 1) {
+                        canvas.drawText(captions[j][0], boxWidth / 2 - captionWidths[j][0] / 2,
+                                j * captionHeight + captionHeight / 2 + 6, blackPaint);
+                    } else {
+                        canvas.drawText(captions[j][0], boxWidth / 2 - captionWidths[j][0] / 2,
+                                j * captionHeight + captionHeight / 2 - adjustUp, blackPaint);
+                        canvas.drawText(captions[j][1], boxWidth / 2 - captionWidths[j][1] / 2,
+                                j * captionHeight + captionHeight / 2 + adjustDown, blackPaint);
+                    }
+                }
+            }
+        }
+
         for (int j = 0; j < tall; j++) {
-
-            if (captions == null) {
-                Log.e("MGH DrumView onDraw", "captions is null");
-                break;
-            }
-            if (captions[j] == null) {
-                Log.e("MGH DrumView onDraw", "captions[" + j + "] is null");
-                break;
-            }
-            if (captionWidths == null) {
-                Log.e("MGH DrumView onDraw", "captionsWidth is null");
-                break;
-            }
-            if (captionWidths[j] == null) {
-                Log.e("MGH DrumView onDraw", "captionsWidth[" + j + "] is null");
-                break;
-            }
-
-            if (captionWidths[j].length == 1) {
-                canvas.drawText(captions[j][0], boxWidth / 2 - captionWidths[j][0] / 2,
-                        j * boxHeight + boxHeight / 2 + 6, blackPaint);
-            } else {
-                canvas.drawText(captions[j][0], boxWidth / 2 - captionWidths[j][0] / 2,
-                        j * boxHeight + boxHeight / 2 - adjustUp, blackPaint);
-                canvas.drawText(captions[j][1], boxWidth / 2 - captionWidths[j][1] / 2,
-                        j * boxHeight + boxHeight / 2 + adjustDown, blackPaint);
-            }
 
             for (int i = 0; i < wide; i++) {
                 if ((firstRowButton == -1 && (j >= data.length || j < 0)) ||
@@ -216,7 +204,9 @@ public class DrumView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
             if (boxX == 0) {
-                handleFirstColumn(boxY);
+                if (captionHeight > 0) {
+                    handleFirstColumn((int) Math.floor(event.getY() / captionHeight));
+                }
             } else {
                 handleTouch(boxX - 1, boxY);
                 isLive = true;
@@ -286,6 +276,10 @@ public class DrumView extends View {
     }
 
     void handleFirstColumn(int y) {
+        if (y < 0 || y >= mChannel.pattern.length) {
+            return;
+        }
+
         Log.d("MGH DrumView handleFC", "setting wide");
         if (firstRowButton == y) {
             firstRowButton = -1;
