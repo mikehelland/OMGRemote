@@ -13,6 +13,9 @@ public class Touch {
     int id;
     int channelId;
     int playingHandle;
+    Note note = null;
+    boolean isPlaying = false;
+
 
     Touch(float x, float y, int id){
         this.x = x;

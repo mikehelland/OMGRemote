@@ -25,6 +25,9 @@ class Channel {
         playLiveNote(note);
     }
     void playLiveNote(Note note) {
+        if (note.isRest()) {
+            arpeggiate = 0;
+        }
         RemoteControlBluetoothHelper.playNote(mConnection, note);
     }
 
@@ -60,5 +63,9 @@ class Channel {
             arpeggiate = i;
             RemoteControlBluetoothHelper.setArpeggiator(mConnection, arpeggiate);
         }
+    }
+
+    ArrayList<Note> getNotes() {
+        return noteList;
     }
 }

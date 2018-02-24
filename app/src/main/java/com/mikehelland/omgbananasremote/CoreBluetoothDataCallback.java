@@ -13,7 +13,7 @@ class CoreBluetoothDataCallback extends BluetoothDataCallback {
     }
 
     public void newData(String name, String value) {
-        Log.d(name, value);
+        Log.d("MGH bt newData", name + (value != null ? value : ""));
 
         if ("JAMINFO_SUBBEATLENGTH".equals(name)) {
             mJam.setSubbeatLength(Integer.parseInt(value));

@@ -176,4 +176,21 @@ public class Jam {
             v.postInvalidate();
         }
     }
+
+    boolean isPlaying() {
+        return playing;
+    }
+
+    int getTotalBeats() {
+        return beats;
+    }
+
+    int getSubbeats() {
+        return subbeats;
+    }
+
+    int getCurrentSubbeat() {
+        return currentSubbeat;
+    }
+
 }
