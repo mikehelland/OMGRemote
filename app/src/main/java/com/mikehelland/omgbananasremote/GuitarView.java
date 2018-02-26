@@ -241,7 +241,6 @@ public class GuitarView extends View {
     }
 
 
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -339,18 +338,11 @@ public class GuitarView extends View {
         float draw_y;
         draw_boxwidth = Math.min(images[0][0].getWidth(), getWidth() / (list.size() + 1));
 
-
         double beatsUsed = 0.0d;
 
         for (int j = 0; j < list.size(); j++) {
 
             draw_note = list.get(j);
-
-/*            if (draw_note.getBeatPosition() % 4 == 0)
-                canvas.drawLine(draw_lastDrawnX, draw_y,
-                        draw_lastDrawnX, draw_y + boxHeight, paint);
-*/
-            draw_x = draw_beatWidth * (float)beatsUsed * 4.0f;
 
             draw_noteImage = null;
             if (draw_note.getBeats() == 2.0d) {

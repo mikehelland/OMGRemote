@@ -9,7 +9,6 @@ import android.view.WindowManager;
 
 public class MainActivity extends FragmentActivity {
 
-    final static boolean MONKEY_TEST = false;
     BluetoothManager mBT;
     Jam mJam = new Jam();
 

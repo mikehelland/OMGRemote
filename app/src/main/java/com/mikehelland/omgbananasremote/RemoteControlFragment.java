@@ -1,5 +1,6 @@
 package com.mikehelland.omgbananasremote;
 
+import android.app.ActivityManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -107,7 +108,7 @@ public class RemoteControlFragment extends Fragment {
         mConnection.addDataCallback(mDataCallback);
 
         //I want to focus on the instruments for the latest monkey tests
-        final boolean monkeyTest = ((MainActivity)getActivity()).MONKEY_TEST;
+        final boolean monkeyTest = ActivityManager.isUserAMonkey();//((MainActivity)getActivity()).MONKEY_TEST;
 
         bpmButton.setOnClickListener(new View.OnClickListener() {
             @Override

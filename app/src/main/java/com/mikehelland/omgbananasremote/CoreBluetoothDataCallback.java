@@ -48,8 +48,11 @@ class CoreBluetoothDataCallback extends BluetoothDataCallback {
         }
 
         if ("CHANNEL_ENABLED".equals(name)) {
-            String[] data = value.split(",");
-            mJam.instruments.get(Integer.parseInt(data[1])).enabled = !"0".equals(data[0]);
+            try {
+                String[] data = value.split(",");
+                mJam.instruments.get(Integer.parseInt(data[1])).enabled = !"0".equals(data[0]);
+            }
+            catch (Exception ignored) {}
         }
 
         if ("LAUNCH_FRETBOARD".equals(name)) {
