@@ -39,9 +39,6 @@ public class MixerView extends View {
 
     private String channelName = "";
 
-    private float volume = 0.5f;
-    private float pan = 0.0f;
-
     private float muteButtonWidth = -1;
     private float volumeStart = -1;
     private final static float controlMargin = 5;
@@ -100,6 +97,9 @@ public class MixerView extends View {
             panStart = volumeStart + volumeWidth + controlMargin;
             panWidth = width - panStart - controlMargin;
         }
+
+        float volume = mChannel.volume;
+        float pan = mChannel.pan;
 
         float height2 = height / 2;
 
@@ -200,19 +200,19 @@ public class MixerView extends View {
         mConnection = connection;
         mChannel = instrument;
 
-        volume = instrument.volume;
-
         setChannelName(instrument.name);
 
     }
     private void performTouch(float x) {
         if (touchingArea == TOUCHING_AREA_VOLUME) {
-            volume = Math.max(0, Math.min(1, (x - volumeStart) / volumeWidth));
+            float volume = Math.max(0, Math.min(1, (x - volumeStart) / volumeWidth));
             mChannel.volume = volume;
             mConnection.writeString("SET_CHANNEL_VOLUME=" + volume + "," + mChannel.channelNumber + ";");
         }
         else if (touchingArea == TOUCHING_AREA_PAN) {
-            pan = Math.max(-1.0f, Math.min(1.0f, ((x - panStart) / panWidth - 0.5f) * 2));
+            float pan = Math.max(-1.0f, Math.min(1.0f, ((x - panStart) / panWidth - 0.5f) * 2));
+            mChannel.pan = pan;
+            mConnection.writeString("SET_CHANNEL_PAN=" + pan + "," + mChannel.channelNumber + ";");
         }
     }
 }

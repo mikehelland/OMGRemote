@@ -54,6 +54,20 @@ class CoreBluetoothDataCallback extends BluetoothDataCallback {
             }
             catch (Exception ignored) {}
         }
+        if ("CHANNEL_VOLUME".equals(name)) {
+            try {
+                String[] data = value.split(",");
+                mJam.instruments.get(Integer.parseInt(data[1])).volume = Float.parseFloat(data[0]);
+            }
+            catch (Exception ignored) {}
+        }
+        if ("CHANNEL_PAN".equals(name)) {
+            try {
+                String[] data = value.split(",");
+                mJam.instruments.get(Integer.parseInt(data[1])).pan = Float.parseFloat(data[0]);
+            }
+            catch (Exception ignored) {}
+        }
 
         if ("LAUNCH_FRETBOARD".equals(name)) {
             String[] lowhigh = value.split(",");

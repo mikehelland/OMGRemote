@@ -58,12 +58,8 @@ public class MixerFragment extends Fragment {
                         });
                     }
                 }
-                if ("CHANNEL_ENABLED".equals(name)) {
-                    //String[] data  = value.split(",");
-                    //boolean enabled = !data[0].equals("0");
-                    //int channelNumber = Integer.parseInt(data[1]);
-                    //mJam.instruments.get(channelNumber).enabled = enabled;
-
+                if ("CHANNEL_ENABLED".equals(name) ||
+                        "CHANNEL_VOLUME".equals(name) || "CHANNEL_PAN".equals(name)) {
                     for (View panel : mPanels)
                         panel.postInvalidate();
                 }

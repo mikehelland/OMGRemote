@@ -4,6 +4,7 @@ class Instrument {
     int channelNumber;
     String name;
     float volume;
+    float pan = 0;
     boolean enabled = true;
 
     SurfaceType surfaceType;

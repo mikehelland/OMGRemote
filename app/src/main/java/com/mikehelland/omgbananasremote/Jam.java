@@ -125,7 +125,6 @@ public class Jam {
 
         Instrument instrument = new Instrument();
         instrument.channelNumber = instruments.size();
-        instrument.name = dataParts[4];
         instrument.enabled = !dataParts[0].equals("0");
         instrument.chromatic = !dataParts[1].equals("0");
         String surfaceType = dataParts[2];
@@ -135,8 +134,10 @@ public class Jam {
             instrument.surfaceType = Instrument.SurfaceType.PRESET_VERTICAL;
         if (surfaceType.startsWith("2"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_FRETBOARD;
+        instrument.name = dataParts[3];
 
-        instrument.volume = Float.parseFloat(dataParts[3]);
+        instrument.volume = Float.parseFloat(dataParts[4]);
+        instrument.pan = Float.parseFloat(dataParts[5]);
         synchronized (instruments) {
             instruments.add(instrument);
         }
