@@ -2,13 +2,12 @@ package com.mikehelland.omgbananasremote;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class SavedJamsFragment extends Fragment {
@@ -40,8 +39,10 @@ public class SavedJamsFragment extends Fragment {
 
                 mConnection.writeString("LOAD_JAM=" + id + ";");
 
-                getFragmentManager().popBackStack();
-
+                FragmentManager fm = getFragmentManager();
+                if (fm != null && fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                }
             }
         });
 

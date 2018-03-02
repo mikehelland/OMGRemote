@@ -55,7 +55,7 @@ public class BluetoothConnection extends Thread {
 
         while (!isInterrupted()){
 
-            byte[] buffer = new byte[1024];
+            final byte[] buffer = new byte[1024];
             hasData = false;
 
             try {
@@ -76,8 +76,7 @@ public class BluetoothConnection extends Thread {
             }
 
             if (hasData)  {
-                Log.e("MGH BT Connection", "buffer length= " + buffer.length + " on thread=" + Thread.currentThread().getId());
-                final String data = new String(buffer).substring(0, Math.min(bytes, buffer.length));
+                String data = new String(buffer, 0, bytes);
                 mBT.newData(mDataCallbacks, data);
             }
 

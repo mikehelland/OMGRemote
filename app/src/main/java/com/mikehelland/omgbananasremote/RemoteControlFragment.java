@@ -1,9 +1,12 @@
 package com.mikehelland.omgbananasremote;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,20 +21,26 @@ public class RemoteControlFragment extends Fragment {
     Jam mJam;
     BluetoothDataCallback mDataCallback;
 
+    private ViewGroup instrumentList;
+    private Button keyButton;
+    private Button bpmButton;
+
+    private Button playButton;
+
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.remote_controls,
                 container, false);
 
+        instrumentList = (ViewGroup)view.findViewById(R.id.instrument_list);
+        keyButton = (Button)view.findViewById(R.id.key_button);
+        bpmButton = (Button)view.findViewById(R.id.bpm_button);
 
-        final ViewGroup instrumentList = (ViewGroup)view.findViewById(R.id.instrument_list);
-        final Button keyButton = (Button)view.findViewById(R.id.key_button);
-        final Button bpmButton = (Button)view.findViewById(R.id.bpm_button);
-
-        final Button loadButton = (Button)view.findViewById(R.id.load_button);
-        final Button addChannelButton = (Button)view.findViewById(R.id.add_channel_button);
-        final Button playButton = (Button)view.findViewById(R.id.play_button);
+        Button loadButton = (Button) view.findViewById(R.id.load_button);
+        Button addChannelButton = (Button) view.findViewById(R.id.add_channel_button);
+        playButton = (Button)view.findViewById(R.id.play_button);
 
         Log.d("MGH RemoteControlF", "on create");
 
@@ -39,70 +48,19 @@ public class RemoteControlFragment extends Fragment {
 
         mDataCallback = new BluetoothDataCallback() {
             @Override
-            public void newData(String name, String value) {
+            public void newData(final String name, final String value) {
 
-                if ("JAMINFO_CHANNELS".equals(name)) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            instrumentList.removeAllViewsInLayout();
-                            makeInstrumentButtons(instrumentList);
-                        }
-                    });
-                }
-                else if ("JAMINFO_SUBBEATLENGTH".equals(name)) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            bpmButton.setText(getResources().getString(R.string.bpm, mJam.getBPM()));
-                        }
-                    });
-                }
-                else if ("JAMINFO_KEY".equals(name) || "JAMINFO_SCALE".equals(name)) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            keyButton.setText(mJam.getKeyName());
-                        }
-                    });
-                }
-                else if ("NEW_CHANNEL".equals(name)) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try { //a jaminfo_channels command might have removed the new_channel already
-                                makeInstrumentButton(
-                                        mJam.instruments.get(mJam.instruments.size() - 1),
-                                        instrumentList);
-                            } catch (Exception e) {e.printStackTrace();}
-                        }
-                    });
-                }
-                else if ("PLAY".equals(name)) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            playButton.setText(R.string.stop);
-                            playButton.setBackgroundColor(Color.GREEN);
-                        }
-                    });
-                }
-                else if ("STOP".equals(name)) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            playButton.setText(R.string.play);
-                            playButton.setBackgroundColor(Color.RED);
-                        }
-                    });
-                }
-                else if ("SAVED_JAMS".equals(name)) {
-                    chooseSavedJam(value);
-                }
-                else if ("SOUNDSETS".equals(name)) {
-                    chooseSoundSet(value);
+                final Activity activity = getActivity();
+                if (activity == null) {
+                    return;
                 }
 
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateUI(name, value);
+                    }
+                });
             }
         };
         mConnection.addDataCallback(mDataCallback);
@@ -120,7 +78,7 @@ public class RemoteControlFragment extends Fragment {
                 showFragment(f);
             }
         });
-        bpmButton.setText(getResources().getString(R.string.bpm, mJam.getBPM()));
+        bpmButton.setText(mJam.getBPM() + " BPM");
 
         view.findViewById(R.id.chordprogression_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +148,46 @@ public class RemoteControlFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
+    void updateUI(String name, String value) {
+        switch (name) {
+            case "JAMINFO_CHANNELS":
+                instrumentList.removeAllViewsInLayout();
+                makeInstrumentButtons(instrumentList);
+                break;
+            case "JAMINFO_SUBBEATLENGTH":
+                bpmButton.setText(mJam.getBPM() + " BPM");
+                break;
+            case "JAMINFO_KEY":
+            case "JAMINFO_SCALE":
+                keyButton.setText(mJam.getKeyName());
+                break;
+            case "NEW_CHANNEL":
+                try { //a jaminfo_channels command might have removed the new_channel already
+                    makeInstrumentButton(
+                            mJam.instruments.get(mJam.instruments.size() - 1),
+                            instrumentList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "PLAY":
+                playButton.setText(R.string.stop);
+                playButton.setBackgroundColor(Color.GREEN);
+                break;
+            case "STOP":
+                playButton.setText(R.string.play);
+                playButton.setBackgroundColor(Color.RED);
+                break;
+            case "SAVED_JAMS":
+                chooseSavedJam(value);
+                break;
+            case "SOUNDSETS":
+                chooseSoundSet(value);
+                break;
+        }
+    }
+
     void makeInstrumentButtons(ViewGroup instrumentList) {
         if (mJam == null) {
             return;
@@ -241,7 +239,12 @@ public class RemoteControlFragment extends Fragment {
     }
 
     void showFragment(Fragment f) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentManager fm = getFragmentManager();
+        if (fm == null) {
+            return;
+        }
+
+        FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(
                 R.anim.slide_in_right,
                 R.anim.slide_out_left,

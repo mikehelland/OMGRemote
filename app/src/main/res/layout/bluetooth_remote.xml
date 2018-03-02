@@ -5,7 +5,17 @@
     android:layout_height="fill_parent"
     >
 
-        <TextView
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bt_host"
+        android:textColor="#4fa5d5"
+        android:gravity="center"
+        android:textSize="28sp"
+        android:layout_marginTop="10dip"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/bt_status"
@@ -13,7 +23,7 @@
             android:gravity="center"
             android:textSize="28sp"
             android:layout_marginTop="10dip"
-            android:layout_alignParentTop="true"/>
+            android:layout_below="@id/bt_host"/>
 
 
         <ImageView

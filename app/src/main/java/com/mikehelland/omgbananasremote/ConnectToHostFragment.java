@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,12 +77,12 @@ public class ConnectToHostFragment extends Fragment {
         host.name = PreferenceManager.
                 getDefaultSharedPreferences(getContext()).getString("default_host_name", "");
 
-        if (host.address.length() == 0) {
-            chooseHost();
-        }
-        else {
+        String device = "(No Device Chosen)";
+        if (host.address.length() > 0) {
+            device = host.name;
             connectToHost(host);
         }
+        ((TextView)mView.findViewById(R.id.bt_host)).setText(device);
 
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,9 +120,12 @@ public class ConnectToHostFragment extends Fragment {
                         if (status.equals(BluetoothManager.STATUS_IO_CONNECTED_THREAD)) {
                             mImageView.setImageResource(R.drawable.device);
                             mStatusText.setText(R.string.accepting_connections);
-                            int stackCount = getFragmentManager().getBackStackEntryCount();
-                            for (int i = 0; i < stackCount; i++) {
-                                getFragmentManager().popBackStack();
+                            FragmentManager fm = getFragmentManager();
+                            if (fm != null) {
+                                int stackCount = fm.getBackStackEntryCount();
+                                for (int i = 0; i < stackCount; i++) {
+                                    fm.popBackStack();
+                                }
                             }
                         }
                         else {
@@ -160,7 +164,11 @@ public class ConnectToHostFragment extends Fragment {
     }
 
     private void showFragment(Fragment f) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentManager fm = getFragmentManager();
+        if (fm == null) {
+            return;
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(
                 R.anim.slide_in_up,
                 R.anim.slide_out_up,

@@ -75,7 +75,7 @@ public class BluetoothChooseDeviceFragment extends Fragment {
             mCallback.run(mPairedList.get(i));
             FragmentManager fm = getFragmentManager();
             if (fm != null) {
-                getFragmentManager().popBackStack();
+                fm.popBackStack();
             }
         }
     }

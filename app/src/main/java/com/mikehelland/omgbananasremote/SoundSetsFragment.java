@@ -2,6 +2,7 @@ package com.mikehelland.omgbananasremote;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +39,10 @@ public class SoundSetsFragment extends Fragment {
 
                 mConnection.writeString("ADD_CHANNEL=" + id + ";");
 
-                getFragmentManager().popBackStack();
-
+                FragmentManager fm = getFragmentManager();
+                if (fm != null && fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                }
             }
         });
 

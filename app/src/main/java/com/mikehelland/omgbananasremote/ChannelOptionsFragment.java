@@ -2,6 +2,7 @@ package com.mikehelland.omgbananasremote;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,10 @@ public class ChannelOptionsFragment extends Fragment {
                 }
 
                 mInstrument.defaultSurface = false;
-                getFragmentManager().popBackStack();
+                FragmentManager fm = getFragmentManager();
+                if (fm != null) {
+                    fm.popBackStack();
+                }
 
             }
         });
@@ -53,7 +57,10 @@ public class ChannelOptionsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 RemoteControlBluetoothHelper.clearChannel(mConnection, mInstrument.channelNumber);
-                getFragmentManager().popBackStack();
+                FragmentManager fm = getFragmentManager();
+                if (fm != null) {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
 
