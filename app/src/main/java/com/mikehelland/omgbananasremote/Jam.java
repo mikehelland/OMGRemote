@@ -138,14 +138,14 @@ public class Jam {
 
         instrument.volume = Float.parseFloat(dataParts[4]);
         instrument.pan = Float.parseFloat(dataParts[5]);
-        synchronized (instruments) {
+        //synchronized (instruments) {
             instruments.add(instrument);
-        }
+        //}
     }
 
     void makeChannels(String value) {
 
-        synchronized (instruments) {
+        //synchronized (instruments) {
             instruments.clear();
 
             if (value.length() == 0) return;
@@ -154,7 +154,7 @@ public class Jam {
             for (String channelData : channelsData) {
                 makeChannel(channelData);
             }
-        }
+        //}
     }
 
     void play() {

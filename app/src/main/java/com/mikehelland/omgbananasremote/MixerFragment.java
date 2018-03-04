@@ -29,6 +29,7 @@ public class MixerFragment extends Fragment {
         mInflater = inflater;
         mView = inflater.inflate(R.layout.mixer_fragment,
                 container, false);
+        mContainer = (ViewGroup)mView.findViewById(R.id.channel_list);
 
         setupPanels(inflater);
 
@@ -36,7 +37,6 @@ public class MixerFragment extends Fragment {
             @Override
             public void newData(String name, String value) {
                 if ("JAMINFO_CHANNELS".equals(name)) {
-                    mContainer.removeAllViewsInLayout();
                     Activity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(new Runnable() {
@@ -53,7 +53,9 @@ public class MixerFragment extends Fragment {
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                setupPanel(mInflater, mJam.instruments.get(mJam.instruments.size() - 1));
+                                try {
+                                    setupPanel(mInflater, mJam.instruments.get(mJam.instruments.size() - 1));
+                                } catch (Exception ignore) {}
                             }
                         });
                     }
@@ -72,11 +74,13 @@ public class MixerFragment extends Fragment {
     }
 
     void setupPanels(LayoutInflater inflater) {
+        mContainer.removeAllViews();
+        /*for (View v : mPanels) {
+            mContainer.removeView(v);
+        }*/
+        mPanels.clear();
 
-
-        mContainer = (ViewGroup)mView.findViewById(R.id.channel_list);
         for (Instrument instrument : mJam.instruments) {
-
             setupPanel(inflater, instrument);
         }
 

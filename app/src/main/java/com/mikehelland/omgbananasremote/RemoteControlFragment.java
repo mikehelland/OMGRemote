@@ -2,7 +2,6 @@ package com.mikehelland.omgbananasremote;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -65,13 +64,9 @@ public class RemoteControlFragment extends Fragment {
         };
         mConnection.addDataCallback(mDataCallback);
 
-        //I want to focus on the instruments for the latest monkey tests
-        final boolean monkeyTest = ActivityManager.isUserAMonkey();//((MainActivity)getActivity()).MONKEY_TEST;
-
         bpmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (monkeyTest) return;
                 BPMFragment f = new BPMFragment();
                 f.mConnection = mConnection;
                 f.mJam = mJam;
@@ -83,7 +78,6 @@ public class RemoteControlFragment extends Fragment {
         view.findViewById(R.id.chordprogression_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (monkeyTest) return;
                 ChordFragment f = new ChordFragment();
                 f.mConnection = mConnection;
                 f.mJam = mJam;
@@ -94,7 +88,6 @@ public class RemoteControlFragment extends Fragment {
         keyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (monkeyTest) return;
                 KeyFragment f = new KeyFragment();
                 f.mConnection = mConnection;
                 f.mJam = mJam;
@@ -136,7 +129,6 @@ public class RemoteControlFragment extends Fragment {
         view.findViewById(R.id.mixer_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (monkeyTest) return;
                 MixerFragment f = new MixerFragment();
                 f.mConnection = mConnection;
                 f.mJam = mJam;
@@ -152,7 +144,8 @@ public class RemoteControlFragment extends Fragment {
     void updateUI(String name, String value) {
         switch (name) {
             case "JAMINFO_CHANNELS":
-                instrumentList.removeAllViewsInLayout();
+                instrumentList.removeAllViews();
+                Log.d("MGH JAMINFO", "should be removing stuff now");
                 makeInstrumentButtons(instrumentList);
                 break;
             case "JAMINFO_SUBBEATLENGTH":
@@ -198,31 +191,33 @@ public class RemoteControlFragment extends Fragment {
     }
 
     void makeInstrumentButton(final Instrument instrument, ViewGroup instrumentList) {
-        Button button = new Button(getContext());
-        button.setTextSize(22);
-        button.setText(instrument.name);
-        button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+        try {
+            Button button = new Button(getContext());
+            button.setTextSize(22);
+            button.setText(instrument.name);
+            button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onInstrumentClicked(instrument);
-            }
-        });
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onInstrumentClicked(instrument);
+                }
+            });
 
-        button.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                showChannelOptions(instrument);
-                return true;
-            }
-        });
-        instrumentList.addView(button);
+            button.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    showChannelOptions(instrument);
+                    return true;
+                }
+            });
+            instrumentList.addView(button);
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+        }
     }
 
     private void onInstrumentClicked(Instrument instrument) {
-        //if (MainActivity.MONKEY_TEST && instrument.surfaceType != Instrument.SurfaceType.PRESET_SEQUENCER) return;
-
         InstrumentFragment f = new InstrumentFragment();
         f.mInstrument = instrument;
         f.mConnection = mConnection;
