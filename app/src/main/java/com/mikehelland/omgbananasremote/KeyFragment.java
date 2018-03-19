@@ -45,6 +45,7 @@ public class KeyFragment extends Fragment {
     private View makeKeyButton(final int i, String caption) {
         final Button button = new Button(getContext());
         button.setBackgroundColor(Color.WHITE);
+        button.setTextColor(Color.BLACK);
         button.setTextSize(22);
         button.setText(caption);
         button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
@@ -72,6 +73,7 @@ public class KeyFragment extends Fragment {
     private View makeScaleButton(final int i, String caption) {
         final Button button = new Button(getContext());
         button.setBackgroundColor(Color.WHITE);
+        button.setTextColor(Color.BLACK);
         button.setTextSize(24);
         button.setText(caption);
         button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));

@@ -155,7 +155,7 @@ public class MixerView extends View {
             if (x <= muteButtonWidth) {
                 mChannel.toggleEnabled();
                 mConnection.writeString("SET_CHANNEL_ENABLED=" +
-                        (mChannel.isEnabled()?"1":"0") + "," + mChannel.channelNumber + ";");
+                        (mChannel.isEnabled()?"1":"0") + "," + mChannel.id + ";");
                 touchingArea = TOUCHING_AREA_MUTE;
                 touchedMuteAt = System.currentTimeMillis();
                 final long thisMute = touchedMuteAt;
@@ -166,7 +166,7 @@ public class MixerView extends View {
                                 if (touchingArea == TOUCHING_AREA_MUTE &&
                                         touchedMuteAt == thisMute) {
                                     Toast.makeText(getContext(), "Channel Cleared!", Toast.LENGTH_SHORT).show();
-                                    mConnection.writeString("CLEAR_CHANNEL=" + mChannel.channelNumber + ";");
+                                    mConnection.writeString("CLEAR_CHANNEL=" + mChannel.id + ";");
                                 }
                             }
                         },
@@ -207,12 +207,12 @@ public class MixerView extends View {
         if (touchingArea == TOUCHING_AREA_VOLUME) {
             float volume = Math.max(0, Math.min(1, (x - volumeStart) / volumeWidth));
             mChannel.volume = volume;
-            mConnection.writeString("SET_CHANNEL_VOLUME=" + volume + "," + mChannel.channelNumber + ";");
+            mConnection.writeString("SET_CHANNEL_VOLUME=" + volume + "," + mChannel.id+ ";");
         }
         else if (touchingArea == TOUCHING_AREA_PAN) {
             float pan = Math.max(-1.0f, Math.min(1.0f, ((x - panStart) / panWidth - 0.5f) * 2));
             mChannel.pan = pan;
-            mConnection.writeString("SET_CHANNEL_PAN=" + pan + "," + mChannel.channelNumber + ";");
+            mConnection.writeString("SET_CHANNEL_PAN=" + pan + "," + mChannel.id + ";");
         }
     }
 }

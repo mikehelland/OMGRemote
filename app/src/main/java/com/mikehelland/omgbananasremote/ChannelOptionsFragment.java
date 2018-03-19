@@ -56,7 +56,7 @@ public class ChannelOptionsFragment extends Fragment {
         view.findViewById(R.id.clear_channel_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RemoteControlBluetoothHelper.clearChannel(mConnection, mInstrument.channelNumber);
+                RemoteControlBluetoothHelper.clearChannel(mConnection, mInstrument.id);
                 FragmentManager fm = getFragmentManager();
                 if (fm != null) {
                     getFragmentManager().popBackStack();

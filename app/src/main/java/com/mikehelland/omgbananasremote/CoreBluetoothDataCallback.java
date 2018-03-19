@@ -50,21 +50,24 @@ class CoreBluetoothDataCallback extends BluetoothDataCallback {
         if ("CHANNEL_ENABLED".equals(name)) {
             try {
                 String[] data = value.split(",");
-                mJam.instruments.get(Integer.parseInt(data[1])).enabled = !"0".equals(data[0]);
+                Instrument channel = mJam.getChannelByID(data[1]);
+                if (channel != null) channel.enabled = !"0".equals(data[0]);
             }
             catch (Exception ignored) {}
         }
         if ("CHANNEL_VOLUME".equals(name)) {
             try {
                 String[] data = value.split(",");
-                mJam.instruments.get(Integer.parseInt(data[1])).volume = Float.parseFloat(data[0]);
+                Instrument channel = mJam.getChannelByID(data[1]);
+                if (channel != null) channel.volume = Float.parseFloat(data[0]);
             }
             catch (Exception ignored) {}
         }
         if ("CHANNEL_PAN".equals(name)) {
             try {
                 String[] data = value.split(",");
-                mJam.instruments.get(Integer.parseInt(data[1])).pan = Float.parseFloat(data[0]);
+                Instrument channel = mJam.getChannelByID(data[1]);
+                if (channel != null) channel.pan = Float.parseFloat(data[0]);
             }
             catch (Exception ignored) {}
         }

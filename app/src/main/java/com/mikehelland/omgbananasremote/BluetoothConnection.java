@@ -101,7 +101,10 @@ public class BluetoothConnection extends Thread {
         try {
             mmOutStream.write(toWrite.getBytes());
         } catch (IOException e) {
-            Log.d(TAG, e.getMessage());
+            Log.d("MGH BT writeString", e.getMessage());
+            if (!mBT.cleaningUp) {
+                mBT.newStatus(mConnectedCallback, BluetoothManager.STATUS_IO_CONNECTED_THREAD);
+            }
         }
     }
 

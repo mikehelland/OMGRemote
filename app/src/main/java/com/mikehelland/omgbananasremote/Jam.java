@@ -7,8 +7,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Jam {
     static String[] KEY_CAPTIONS = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
-    static String[] SCALE_CAPTIONS = {"Major", "Minor", "Pentatonic", "Blues"};
-    static String[] SCALES = {"0,2,4,5,7,9,11", "0,2,3,5,7,8,10", "0,2,4,7,9", "0,3,5,6,7,10"};
+    static String[] SCALE_CAPTIONS = {"Major", "Minor", "Pentatonic", "Blues",
+            "Harmonic Minor", "Chromatic"};
+    static String[] SCALES = {"0,2,4,5,7,9,11", "0,2,3,5,7,8,10", "0,2,4,7,9", "0,3,5,6,7,10",
+            "0,2,3,5,7,8,11", "0,1,2,3,4,5,6,7,8,9,10,11"};
 
     int subbeats = 4;
     int beats = 8;
@@ -124,37 +126,33 @@ public class Jam {
         String[] dataParts = channelData.split(",");
 
         Instrument instrument = new Instrument();
-        instrument.channelNumber = instruments.size();
-        instrument.enabled = !dataParts[0].equals("0");
-        instrument.chromatic = !dataParts[1].equals("0");
-        String surfaceType = dataParts[2];
+        instrument.id = dataParts[0];
+        instrument.enabled = !dataParts[1].equals("0");
+        instrument.chromatic = !dataParts[2].equals("0");
+        String surfaceType = dataParts[3];
         if (surfaceType.startsWith("0"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_SEQUENCER;
         if (surfaceType.startsWith("1"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_VERTICAL;
         if (surfaceType.startsWith("2"))
             instrument.surfaceType = Instrument.SurfaceType.PRESET_FRETBOARD;
-        instrument.name = dataParts[3];
+        instrument.name = dataParts[4];
 
-        instrument.volume = Float.parseFloat(dataParts[4]);
-        instrument.pan = Float.parseFloat(dataParts[5]);
-        //synchronized (instruments) {
-            instruments.add(instrument);
-        //}
+        instrument.volume = Float.parseFloat(dataParts[5]);
+        instrument.pan = Float.parseFloat(dataParts[6]);
+        instruments.add(instrument);
     }
 
     void makeChannels(String value) {
 
-        //synchronized (instruments) {
-            instruments.clear();
+        instruments.clear();
 
-            if (value.length() == 0) return;
+        if (value.length() == 0) return;
 
-            String[] channelsData = value.split("\\|");
-            for (String channelData : channelsData) {
-                makeChannel(channelData);
-            }
-        //}
+        String[] channelsData = value.split("\\|");
+        for (String channelData : channelsData) {
+            makeChannel(channelData);
+        }
     }
 
     void play() {
@@ -194,4 +192,12 @@ public class Jam {
         return currentSubbeat;
     }
 
+    Instrument getChannelByID(String datum) {
+        for (Instrument instrument : instruments) {
+            if (instrument.id.equals(datum)) {
+                return instrument;
+            }
+        }
+        return null;
+    }
 }

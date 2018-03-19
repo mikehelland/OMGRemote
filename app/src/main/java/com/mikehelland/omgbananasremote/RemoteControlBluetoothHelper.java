@@ -5,8 +5,8 @@ class RemoteControlBluetoothHelper {
         connection.writeString("SET_SUBBEATLENGTH=" + subbeatLength + ";");
     }
 
-    static void setChannel(BluetoothConnection connection, int channel) {
-        connection.writeString("SET_CHANNEL=" + channel + ";");
+    static void setChannel(BluetoothConnection connection, String channelID) {
+        connection.writeString("SET_CHANNEL=" + channelID + ";");
     }
 
     static void setChord(BluetoothConnection connection, int value) {
@@ -46,7 +46,7 @@ class RemoteControlBluetoothHelper {
     }
 
     static void setArpeggiator(BluetoothConnection connection, int arpeggiate) {
-        connection.writeString("SET_ARPEGGIATOR=" + Integer.toString(arpeggiate) + ";");
+        connection.writeString("CHANNEL_SET_ARPEGGIATOR=" + Integer.toString(arpeggiate) + ";");
     }
     static void setArpNotes(BluetoothConnection connection, Note[] notes) {
         String output = "";
@@ -56,10 +56,10 @@ class RemoteControlBluetoothHelper {
                 output += "|";
             }
         }
-        connection.writeString("SET_ARPNOTES=" + output + ";");
+        connection.writeString("CHANNEL_SET_ARPNOTES=" + output + ";");
     }
 
-    static void clearChannel(BluetoothConnection connection, int channel) {
-        connection.writeString("CLEAR_CHANNEL=" + channel + ";");
+    static void clearChannel(BluetoothConnection connection, String channelID) {
+        connection.writeString("CLEAR_CHANNEL=" + channelID + ";");
     }
 }

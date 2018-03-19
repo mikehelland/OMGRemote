@@ -1,7 +1,7 @@
 package com.mikehelland.omgbananasremote;
 
 class Instrument {
-    int channelNumber;
+    String id = "";
     String name;
     float volume;
     float pan = 0;
